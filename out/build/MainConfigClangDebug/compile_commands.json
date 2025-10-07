@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -g -std=c++23 -Wno-reserved-module-identifier @CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o.modmap -o CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o -c /opt/gcc-15/include/c++/15.2.0/bits/std.cc",
+  "file": "/opt/gcc-15/include/c++/15.2.0/bits/std.cc",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -g -std=c++23 -Wno-reserved-module-identifier @CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o.modmap -o CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o -c /opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc",
+  "file": "/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -g -std=c++26 -Wno-reserved-module-identifier @CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o.modmap -o CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o -c /opt/gcc-15/include/c++/15.2.0/bits/std.cc",
+  "file": "/opt/gcc-15/include/c++/15.2.0/bits/std.cc",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -g -std=c++26 -Wno-reserved-module-identifier @CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o.modmap -o CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o -c /opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc",
+  "file": "/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/__cmake_cxx26.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -g -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/main.cpp.o.modmap -o CMakeFiles/HastyRadical.dir/src/main.cpp.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/main.cpp",
+  "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/main.cpp",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -g -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.modmap -o CMakeFiles/HastyRadical.dir/src/radlib.cppm.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/radlib.cppm",
+  "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/radlib.cppm",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/src/radlib.cppm.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -g -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.modmap -o CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm",
+  "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o"
+}
+]

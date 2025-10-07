@@ -1,0 +1,26 @@
+# ninja log v5
+64	2368	1759508468726599231	CMakeFiles/__cmake_cxx23.dir/std.pcm	fa4abaaa0fc69e26
+2	18	1759820891900983435	CMakeFiles/HastyRadical.dir/src/main.cpp.o.ddi	d795a9f9a2d3c55a
+2	32	1759508493833309035	CMakeFiles/__cmake_cxx23.dir/std.compat.pcm	bb89c2eb1073e30a
+3	21	1759790393919998724	CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.ddi	eea875e20086df3f
+1703	1737	1759820893618310638	HastyRadical	5be4419416ad937
+6	25	1759790393917495919	lib__cmake_cxx23.a	dd16859177113c3c
+21	1703	1759820893579971314	CMakeFiles/HastyRadical.dir/src/main.cpp.o	41de2d8a0b4b4f0f
+24	92	1759790393990162670	CMakeFiles/HastyRadical.dir/radlib.pcm	3856c2d854ffdfd1
+18	21	1759820891900983435	CMakeFiles/HastyRadical.dir/src/main.cpp.o.modmap	d2a26ce0728db77f
+2	4	1759818782024871583	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o.modmap	5ee179fa500d57f1
+2	4	1759818782024871583	CMakeFiles/__cmake_cxx23.dir/CXXModules.json	5ee179fa500d57f1
+2	4	1759818782024871583	CMakeFiles/__cmake_cxx23.dir/CXX.dd	5ee179fa500d57f1
+18	21	1759820891900983435	CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.modmap	d2a26ce0728db77f
+2	18	1759508466387163721	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o.ddi	ffd4c31a29efc07f
+3	98	1759789317758648039	CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.ddi	905f3c76328cb0af
+2	32	1759508493833309035	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o	bb89c2eb1073e30a
+64	2368	1759508468726599231	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o	fa4abaaa0fc69e26
+2	61	1759508466428317696	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o.ddi	cb7aec9c240de47e
+24	92	1759790393990162670	CMakeFiles/HastyRadical.dir/src/radlib.cppm.o	3856c2d854ffdfd1
+101	433	1759789318090885003	CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o	c469a03c70f57071
+18	21	1759820891900983435	CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.modmap	d2a26ce0728db77f
+101	433	1759789318090885003	CMakeFiles/HastyRadical.dir/threadpool.pcm	c469a03c70f57071
+18	21	1759820891900983435	CMakeFiles/HastyRadical.dir/CXX.dd	d2a26ce0728db77f
+18	21	1759820891900983435	CMakeFiles/HastyRadical.dir/CXXModules.json	d2a26ce0728db77f
+2	4	1759818782024871583	CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o.modmap	5ee179fa500d57f1

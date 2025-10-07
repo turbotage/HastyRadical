@@ -1,0 +1,21 @@
+{
+  "revision": 0,
+  "rules": [
+    {
+      "primary-output": "CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o",
+      "provides": [
+        {
+          "is-interface": true,
+          "logical-name": "threadpool",
+          "source-path": "/home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm"
+        }
+      ],
+      "requires": [
+        {
+          "logical-name": "std"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

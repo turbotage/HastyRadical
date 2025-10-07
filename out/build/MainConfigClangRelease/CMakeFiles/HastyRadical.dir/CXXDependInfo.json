@@ -1,0 +1,52 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "Clang",
+	"compiler-simulate-id" : "",
+	"config" : "RelWithDebInfo",
+	"cxx-modules" : 
+	{
+		"CMakeFiles/HastyRadical.dir/src/radlib.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "CXX_MODULES",
+			"relative-directory" : "src",
+			"source" : "/home/turbotage/Documents/GitHub/HastyRadical/src/radlib.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "CXX_MODULES",
+			"relative-directory" : "src",
+			"source" : "/home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		}
+	},
+	"database-info" : null,
+	"dir-cur-bld" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease",
+	"dir-cur-src" : "/home/turbotage/Documents/GitHub/HastyRadical",
+	"dir-top-bld" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease",
+	"dir-top-src" : "/home/turbotage/Documents/GitHub/HastyRadical",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : 
+	[
+		"/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease/CMakeFiles/__cmake_cxx23.dir"
+	],
+	"module-dir" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease/CMakeFiles/HastyRadical.dir",
+	"sources" : 
+	{
+		"CMakeFiles/HastyRadical.dir/src/main.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/turbotage/Documents/GitHub/HastyRadical/src/main.cpp"
+		}
+	}
+}

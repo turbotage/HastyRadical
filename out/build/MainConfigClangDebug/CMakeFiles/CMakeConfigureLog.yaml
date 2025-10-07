@@ -1,0 +1,1391 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/home/turbotage/Documents/install/LibTorch/bin/"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/"
+      - "/home/turbotage/Documents/install/LibTorch/"
+      - "/home/turbotage/Documents/install/HighFive/bin/"
+      - "/home/turbotage/Documents/install/HighFive/sbin/"
+      - "/home/turbotage/Documents/install/HighFive/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/turbotage/Documents/install/LibTorch/bin/uname"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/uname"
+      - "/home/turbotage/Documents/install/LibTorch/uname"
+      - "/home/turbotage/Documents/install/HighFive/bin/uname"
+      - "/home/turbotage/Documents/install/HighFive/sbin/uname"
+      - "/home/turbotage/Documents/install/HighFive/uname"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/uname"
+      - "/home/turbotage/.local/bin/uname"
+      - "/usr/local/cuda-12.6/bin/uname"
+      - "/home/turbotage/miniconda3/condabin/uname"
+      - "/home/turbotage/.cargo/bin/uname"
+      - "/usr/local/sbin/uname"
+      - "/usr/local/bin/uname"
+      - "/usr/sbin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      The system is: Linux - 6.14.0-29-generic - x86_64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeNinjaFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Program used to build from build.ninja files."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ninja-build"
+      - "ninja"
+      - "samu"
+    candidate_directories:
+      - "/home/turbotage/Documents/install/LibTorch/bin/"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/"
+      - "/home/turbotage/Documents/install/LibTorch/"
+      - "/home/turbotage/Documents/install/HighFive/bin/"
+      - "/home/turbotage/Documents/install/HighFive/sbin/"
+      - "/home/turbotage/Documents/install/HighFive/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/turbotage/Documents/install/LibTorch/bin/ninja-build"
+      - "/home/turbotage/Documents/install/LibTorch/bin/ninja"
+      - "/home/turbotage/Documents/install/LibTorch/bin/samu"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/ninja-build"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/ninja"
+      - "/home/turbotage/Documents/install/LibTorch/sbin/samu"
+      - "/home/turbotage/Documents/install/LibTorch/ninja-build"
+      - "/home/turbotage/Documents/install/LibTorch/ninja"
+      - "/home/turbotage/Documents/install/LibTorch/samu"
+      - "/home/turbotage/Documents/install/HighFive/bin/ninja-build"
+      - "/home/turbotage/Documents/install/HighFive/bin/ninja"
+      - "/home/turbotage/Documents/install/HighFive/bin/samu"
+      - "/home/turbotage/Documents/install/HighFive/sbin/ninja-build"
+      - "/home/turbotage/Documents/install/HighFive/sbin/ninja"
+      - "/home/turbotage/Documents/install/HighFive/sbin/samu"
+      - "/home/turbotage/Documents/install/HighFive/ninja-build"
+      - "/home/turbotage/Documents/install/HighFive/ninja"
+      - "/home/turbotage/Documents/install/HighFive/samu"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/ninja-build"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/ninja"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/samu"
+      - "/home/turbotage/.local/bin/ninja-build"
+      - "/home/turbotage/.local/bin/ninja"
+      - "/home/turbotage/.local/bin/samu"
+      - "/usr/local/cuda-12.6/bin/ninja-build"
+      - "/usr/local/cuda-12.6/bin/ninja"
+      - "/usr/local/cuda-12.6/bin/samu"
+      - "/home/turbotage/miniconda3/condabin/ninja-build"
+      - "/home/turbotage/miniconda3/condabin/ninja"
+      - "/home/turbotage/miniconda3/condabin/samu"
+      - "/home/turbotage/.cargo/bin/ninja-build"
+      - "/home/turbotage/.cargo/bin/ninja"
+      - "/home/turbotage/.cargo/bin/samu"
+      - "/usr/local/sbin/ninja-build"
+      - "/usr/local/sbin/ninja"
+      - "/usr/local/sbin/samu"
+      - "/usr/local/bin/ninja-build"
+      - "/usr/local/bin/ninja"
+      - "/usr/local/bin/samu"
+      - "/usr/sbin/ninja-build"
+      - "/usr/sbin/ninja"
+      - "/usr/sbin/samu"
+      - "/usr/bin/ninja-build"
+    found: "/usr/bin/ninja"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/"
+    found: "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/local/bin/clang++-22-gcc15 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is Clang, found in:
+        /home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/4.1.2/CompilerIdCXX/a.out
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ar-22"
+      - "llvm-ar"
+      - "ar-22"
+      - "ar"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-ar-22"
+      - "/opt/gcc-15/bin/llvm-ar-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ar-22"
+      - "/home/turbotage/.local/bin/llvm-ar-22"
+      - "/usr/local/cuda-12.6/bin/llvm-ar-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-ar-22"
+      - "/home/turbotage/.cargo/bin/llvm-ar-22"
+      - "/usr/local/sbin/llvm-ar-22"
+      - "/usr/sbin/llvm-ar-22"
+    found: "/usr/bin/llvm-ar-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ranlib-22"
+      - "llvm-ranlib"
+      - "ranlib-22"
+      - "ranlib"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-ranlib-22"
+      - "/opt/gcc-15/bin/llvm-ranlib-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ranlib-22"
+      - "/home/turbotage/.local/bin/llvm-ranlib-22"
+      - "/usr/local/cuda-12.6/bin/llvm-ranlib-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-ranlib-22"
+      - "/home/turbotage/.cargo/bin/llvm-ranlib-22"
+      - "/usr/local/sbin/llvm-ranlib-22"
+      - "/usr/sbin/llvm-ranlib-22"
+    found: "/usr/bin/llvm-ranlib-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-strip-22"
+      - "llvm-strip"
+      - "strip-22"
+      - "strip"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-strip-22"
+      - "/opt/gcc-15/bin/llvm-strip-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-strip-22"
+      - "/home/turbotage/.local/bin/llvm-strip-22"
+      - "/usr/local/cuda-12.6/bin/llvm-strip-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-strip-22"
+      - "/home/turbotage/.cargo/bin/llvm-strip-22"
+      - "/usr/local/sbin/llvm-strip-22"
+      - "/usr/sbin/llvm-strip-22"
+    found: "/usr/bin/llvm-strip-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-nm-22"
+      - "llvm-nm"
+      - "nm-22"
+      - "nm"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-nm-22"
+      - "/opt/gcc-15/bin/llvm-nm-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-nm-22"
+      - "/home/turbotage/.local/bin/llvm-nm-22"
+      - "/usr/local/cuda-12.6/bin/llvm-nm-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-nm-22"
+      - "/home/turbotage/.cargo/bin/llvm-nm-22"
+      - "/usr/local/sbin/llvm-nm-22"
+      - "/usr/sbin/llvm-nm-22"
+    found: "/usr/bin/llvm-nm-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-objdump-22"
+      - "llvm-objdump"
+      - "objdump-22"
+      - "objdump"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-objdump-22"
+      - "/opt/gcc-15/bin/llvm-objdump-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-objdump-22"
+      - "/home/turbotage/.local/bin/llvm-objdump-22"
+      - "/usr/local/cuda-12.6/bin/llvm-objdump-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-objdump-22"
+      - "/home/turbotage/.cargo/bin/llvm-objdump-22"
+      - "/usr/local/sbin/llvm-objdump-22"
+      - "/usr/sbin/llvm-objdump-22"
+    found: "/usr/bin/llvm-objdump-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJCOPY"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-objcopy-22"
+      - "llvm-objcopy"
+      - "objcopy-22"
+      - "objcopy"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-objcopy-22"
+      - "/opt/gcc-15/bin/llvm-objcopy-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-objcopy-22"
+      - "/home/turbotage/.local/bin/llvm-objcopy-22"
+      - "/usr/local/cuda-12.6/bin/llvm-objcopy-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-objcopy-22"
+      - "/home/turbotage/.cargo/bin/llvm-objcopy-22"
+      - "/usr/local/sbin/llvm-objcopy-22"
+      - "/usr/sbin/llvm-objcopy-22"
+    found: "/usr/bin/llvm-objcopy-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-readelf-22"
+      - "llvm-readelf"
+      - "readelf-22"
+      - "readelf"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-readelf-22"
+      - "/opt/gcc-15/bin/llvm-readelf-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-readelf-22"
+      - "/home/turbotage/.local/bin/llvm-readelf-22"
+      - "/usr/local/cuda-12.6/bin/llvm-readelf-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-readelf-22"
+      - "/home/turbotage/.cargo/bin/llvm-readelf-22"
+      - "/usr/local/sbin/llvm-readelf-22"
+      - "/usr/sbin/llvm-readelf-22"
+    found: "/usr/bin/llvm-readelf-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-dlltool-22"
+      - "llvm-dlltool"
+      - "dlltool-22"
+      - "dlltool"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-dlltool-22"
+      - "/opt/gcc-15/bin/llvm-dlltool-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-dlltool-22"
+      - "/home/turbotage/.local/bin/llvm-dlltool-22"
+      - "/usr/local/cuda-12.6/bin/llvm-dlltool-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-dlltool-22"
+      - "/home/turbotage/.cargo/bin/llvm-dlltool-22"
+      - "/usr/local/sbin/llvm-dlltool-22"
+      - "/usr/sbin/llvm-dlltool-22"
+    found: "/usr/bin/llvm-dlltool-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-addr2line-22"
+      - "llvm-addr2line"
+      - "addr2line-22"
+      - "addr2line"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-addr2line-22"
+      - "/opt/gcc-15/bin/llvm-addr2line-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-addr2line-22"
+      - "/home/turbotage/.local/bin/llvm-addr2line-22"
+      - "/usr/local/cuda-12.6/bin/llvm-addr2line-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-addr2line-22"
+      - "/home/turbotage/.cargo/bin/llvm-addr2line-22"
+      - "/usr/local/sbin/llvm-addr2line-22"
+      - "/usr/sbin/llvm-addr2line-22"
+    found: "/usr/bin/llvm-addr2line-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "tapi-22"
+      - "tapi"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/opt/gcc-15/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/tapi-22"
+      - "/opt/gcc-15/bin/tapi-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/tapi-22"
+      - "/home/turbotage/.local/bin/tapi-22"
+      - "/usr/local/cuda-12.6/bin/tapi-22"
+      - "/home/turbotage/miniconda3/condabin/tapi-22"
+      - "/home/turbotage/.cargo/bin/tapi-22"
+      - "/usr/local/sbin/tapi-22"
+      - "/usr/sbin/tapi-22"
+      - "/usr/bin/tapi-22"
+      - "/sbin/tapi-22"
+      - "/bin/tapi-22"
+      - "/usr/games/tapi-22"
+      - "/usr/local/games/tapi-22"
+      - "/snap/bin/tapi-22"
+      - "/usr/local/bin/tapi"
+      - "/opt/gcc-15/bin/tapi"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/tapi"
+      - "/home/turbotage/.local/bin/tapi"
+      - "/usr/local/cuda-12.6/bin/tapi"
+      - "/home/turbotage/miniconda3/condabin/tapi"
+      - "/home/turbotage/.cargo/bin/tapi"
+      - "/usr/local/sbin/tapi"
+      - "/usr/sbin/tapi"
+      - "/usr/bin/tapi"
+      - "/sbin/tapi"
+      - "/bin/tapi"
+      - "/usr/games/tapi"
+      - "/usr/local/games/tapi"
+      - "/snap/bin/tapi"
+    found: false
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/Compiler/Clang-FindBinUtils.cmake:26 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_AR"
+    description: "LLVM archiver"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ar-22.0"
+      - "llvm-ar-22"
+      - "llvm-ar22"
+      - "llvm-ar"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-ar-22.0"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ar-22.0"
+      - "/home/turbotage/.local/bin/llvm-ar-22.0"
+      - "/usr/local/cuda-12.6/bin/llvm-ar-22.0"
+      - "/home/turbotage/miniconda3/condabin/llvm-ar-22.0"
+      - "/home/turbotage/.cargo/bin/llvm-ar-22.0"
+      - "/usr/local/sbin/llvm-ar-22.0"
+      - "/usr/sbin/llvm-ar-22.0"
+      - "/usr/bin/llvm-ar-22.0"
+      - "/sbin/llvm-ar-22.0"
+      - "/bin/llvm-ar-22.0"
+      - "/usr/games/llvm-ar-22.0"
+      - "/usr/local/games/llvm-ar-22.0"
+      - "/snap/bin/llvm-ar-22.0"
+      - "/usr/local/bin/llvm-ar-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ar-22"
+      - "/home/turbotage/.local/bin/llvm-ar-22"
+      - "/usr/local/cuda-12.6/bin/llvm-ar-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-ar-22"
+      - "/home/turbotage/.cargo/bin/llvm-ar-22"
+      - "/usr/local/sbin/llvm-ar-22"
+      - "/usr/sbin/llvm-ar-22"
+    found: "/usr/bin/llvm-ar-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/Compiler/Clang-FindBinUtils.cmake:38 (find_program)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:8 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_RANLIB"
+    description: "Generate index for LLVM archive"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ranlib-22.0"
+      - "llvm-ranlib-22"
+      - "llvm-ranlib22"
+      - "llvm-ranlib"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/"
+      - "/home/turbotage/.local/bin/"
+      - "/usr/local/cuda-12.6/bin/"
+      - "/home/turbotage/miniconda3/condabin/"
+      - "/home/turbotage/.cargo/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/local/bin/llvm-ranlib-22.0"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ranlib-22.0"
+      - "/home/turbotage/.local/bin/llvm-ranlib-22.0"
+      - "/usr/local/cuda-12.6/bin/llvm-ranlib-22.0"
+      - "/home/turbotage/miniconda3/condabin/llvm-ranlib-22.0"
+      - "/home/turbotage/.cargo/bin/llvm-ranlib-22.0"
+      - "/usr/local/sbin/llvm-ranlib-22.0"
+      - "/usr/sbin/llvm-ranlib-22.0"
+      - "/usr/bin/llvm-ranlib-22.0"
+      - "/sbin/llvm-ranlib-22.0"
+      - "/bin/llvm-ranlib-22.0"
+      - "/usr/games/llvm-ranlib-22.0"
+      - "/usr/local/games/llvm-ranlib-22.0"
+      - "/snap/bin/llvm-ranlib-22.0"
+      - "/usr/local/bin/llvm-ranlib-22"
+      - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli/llvm-ranlib-22"
+      - "/home/turbotage/.local/bin/llvm-ranlib-22"
+      - "/usr/local/cuda-12.6/bin/llvm-ranlib-22"
+      - "/home/turbotage/miniconda3/condabin/llvm-ranlib-22"
+      - "/home/turbotage/.cargo/bin/llvm-ranlib-22"
+      - "/usr/local/sbin/llvm-ranlib-22"
+      - "/usr/sbin/llvm-ranlib-22"
+    found: "/usr/bin/llvm-ranlib-22"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/turbotage/Documents/install/LibTorch"
+        - "/home/turbotage/Documents/install/HighFive"
+      ENV{PATH}:
+        - "/home/turbotage/.vscode-server/cli/servers/Stable-e3a5acfb517a443235981655413d566533107e92/server/bin/remote-cli"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/cuda-12.6/bin"
+        - "/home/turbotage/miniconda3/condabin"
+        - "/home/turbotage/.cargo/bin"
+        - "/home/turbotage/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+        - "/home/turbotage/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/home/turbotage/Documents/GitHub/HastyRadical/out/install/MainConfigClangDebug"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B"
+      binary: "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B"
+    cmakeVariables:
+      CMAKE_CUDA_ARCHITECTURES: "89"
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/bin/clang-scan-deps-22"
+      CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN: "/opt/gcc-15"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN: "/opt/gcc-15"
+      CMAKE_EXE_LINKER_FLAGS: "-fuse-ld=lld-22"
+      CMAKE_EXPERIMENTAL_CXX_IMPORT_STD: "d0edc3af-4c50-42ea-a356-e2862fe7a444"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_78505
+        [1/2] /usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15   -std=c++17   -v -MD -MT CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -c /snap/cmake/1487/share/cmake-4.1/Modules/CMakeCXXCompilerABI.cpp
+        Ubuntu clang version 22.0.0 (++20250922081747+1ee18959bcdf-1~exp1~20250922201916.1183)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-22/bin
+        Found candidate GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0
+        Selected GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found CUDA installation: /usr/local/cuda, version 
+         (in-process)
+         "/usr/lib/llvm-22/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B -v -fcoverage-compilation-dir=/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B -resource-dir /usr/lib/llvm-22/lib/clang/22 -dependency-file CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0 -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward -internal-isystem /usr/lib/llvm-22/lib/clang/22/include -internal-isystem /usr/local/include -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../x86_64-pc-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -std=c++17 -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -faddrsig -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -x c++ /snap/cmake/1487/share/cmake-4.1/Modules/CMakeCXXCompilerABI.cpp
+        clang -cc1 version 22.0.0 based upon LLVM 22.0.0 default target x86_64-pc-linux-gnu
+        ignoring nonexistent directory "/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../x86_64-pc-linux-gnu/include"
+        ignoring nonexistent directory "/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0
+         /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu
+         /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward
+         /usr/lib/llvm-22/lib/clang/22/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        [2/2] : && /usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15  -fuse-ld=lld-22 -v -Wl,-v CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_78505   && :
+        Ubuntu clang version 22.0.0 (++20250922081747+1ee18959bcdf-1~exp1~20250922201916.1183)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-22/bin
+        Found candidate GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0
+        Selected GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found CUDA installation: /usr/local/cuda, version 
+         "/usr/bin/ld.lld-22" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_78505 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtbeginS.o -L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0 -L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/usr/lib/llvm-22/bin/../lib -L/lib -L/usr/lib -v CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtendS.o /lib/x86_64-linux-gnu/crtn.o
+        Ubuntu LLD 22.0.0 (compatible with GNU linkers)
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0]
+          add: [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu]
+          add: [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward]
+          add: [/usr/lib/llvm-22/lib/clang/22/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0] ==> [/opt/gcc-15/include/c++/15.2.0]
+        collapse include dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu] ==> [/opt/gcc-15/include/c++/15.2.0/x86_64-pc-linux-gnu]
+        collapse include dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward] ==> [/opt/gcc-15/include/c++/15.2.0/backward]
+        collapse include dir [/usr/lib/llvm-22/lib/clang/22/include] ==> [/usr/lib/llvm-22/lib/clang/22/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/opt/gcc-15/include/c++/15.2.0;/opt/gcc-15/include/c++/15.2.0/x86_64-pc-linux-gnu;/opt/gcc-15/include/c++/15.2.0/backward;/usr/lib/llvm-22/lib/clang/22/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/snap/cmake/1487/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_78505]
+        ignore line: [[1/2] /usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15   -std=c++17   -v -MD -MT CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -c /snap/cmake/1487/share/cmake-4.1/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Ubuntu clang version 22.0.0 (++20250922081747+1ee18959bcdf-1~exp1~20250922201916.1183)]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/lib/llvm-22/bin]
+        ignore line: [Found candidate GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+        ignore line: [Selected GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+        ignore line: [Candidate multilib: .]
+        ignore line: [@m64]
+        ignore line: [Selected multilib: .]
+        ignore line: [@m64]
+        ignore line: [Found CUDA installation: /usr/local/cuda  version ]
+        ignore line: [ (in-process)]
+        ignore line: [ "/usr/lib/llvm-22/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B -v -fcoverage-compilation-dir=/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/CMakeScratch/TryCompile-m2cZ0B -resource-dir /usr/lib/llvm-22/lib/clang/22 -dependency-file CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0 -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward -internal-isystem /usr/lib/llvm-22/lib/clang/22/include -internal-isystem /usr/local/include -internal-isystem /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../x86_64-pc-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -std=c++17 -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -faddrsig -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -x c++ /snap/cmake/1487/share/cmake-4.1/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [clang -cc1 version 22.0.0 based upon LLVM 22.0.0 default target x86_64-pc-linux-gnu]
+        ignore line: [ignoring nonexistent directory "/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../x86_64-pc-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0]
+        ignore line: [ /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/x86_64-pc-linux-gnu]
+        ignore line: [ /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/backward]
+        ignore line: [ /usr/lib/llvm-22/lib/clang/22/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [[2/2] : && /usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15  -fuse-ld=lld-22 -v -Wl,-v CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_78505   && :]
+        ignore line: [Ubuntu clang version 22.0.0 (++20250922081747+1ee18959bcdf-1~exp1~20250922201916.1183)]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/lib/llvm-22/bin]
+        ignore line: [Found candidate GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+        ignore line: [Selected GCC installation: /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+        ignore line: [Candidate multilib: .]
+        ignore line: [@m64]
+        ignore line: [Selected multilib: .]
+        ignore line: [@m64]
+        ignore line: [Found CUDA installation: /usr/local/cuda  version ]
+        link line: [ "/usr/bin/ld.lld-22" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_78505 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtbeginS.o -L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0 -L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/usr/lib/llvm-22/bin/../lib -L/lib -L/usr/lib -v CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtendS.o /lib/x86_64-linux-gnu/crtn.o]
+          arg [/usr/bin/ld.lld-22] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_78505] ==> ignore
+          arg [/lib/x86_64-linux-gnu/Scrt1.o] ==> obj [/lib/x86_64-linux-gnu/Scrt1.o]
+          arg [/lib/x86_64-linux-gnu/crti.o] ==> obj [/lib/x86_64-linux-gnu/crti.o]
+          arg [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtbeginS.o] ==> obj [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtbeginS.o]
+          arg [-L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0] ==> dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+          arg [-L/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../lib64] ==> dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../lib64]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib64] ==> dir [/usr/lib64]
+          arg [-L/usr/lib/llvm-22/bin/../lib] ==> dir [/usr/lib/llvm-22/bin/../lib]
+          arg [-L/lib] ==> dir [/lib]
+          arg [-L/usr/lib] ==> dir [/usr/lib]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_78505.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtendS.o] ==> obj [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtendS.o]
+          arg [/lib/x86_64-linux-gnu/crtn.o] ==> obj [/lib/x86_64-linux-gnu/crtn.o]
+        ignore line: [Ubuntu LLD 22.0.0 (compatible with GNU linkers)]
+        ignore line: []
+        ignore line: []
+        collapse library dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0] ==> [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0]
+        collapse library dir [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../lib64] ==> [/opt/gcc-15/lib64]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib64] ==> [/usr/lib64]
+        collapse library dir [/usr/lib/llvm-22/bin/../lib] ==> [/usr/lib/llvm-22/lib]
+        collapse library dir [/lib] ==> [/lib]
+        collapse library dir [/usr/lib] ==> [/usr/lib]
+        implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/lib/x86_64-linux-gnu/Scrt1.o;/lib/x86_64-linux-gnu/crti.o;/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtbeginS.o;/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/crtendS.o;/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0;/opt/gcc-15/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/usr/lib64;/usr/lib/llvm-22/lib;/lib;/usr/lib]
+        implicit fwks: []
+      
+      
+...

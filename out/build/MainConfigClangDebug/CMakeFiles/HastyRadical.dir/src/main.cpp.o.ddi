@@ -1,0 +1,17 @@
+{
+  "revision": 0,
+  "rules": [
+    {
+      "primary-output": "CMakeFiles/HastyRadical.dir/src/main.cpp.o",
+      "requires": [
+        {
+          "logical-name": "std"
+        },
+        {
+          "logical-name": "radlib"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

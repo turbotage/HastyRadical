@@ -1,0 +1,42 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "Clang",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : 
+	{
+		"CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "std",
+			"relative-directory" : "",
+			"source" : "/opt/gcc-15/include/c++/15.2.0/bits/std.cc",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc.o" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "std",
+			"relative-directory" : "",
+			"source" : "/opt/gcc-15/include/c++/15.2.0/bits/std.compat.cc",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		}
+	},
+	"database-info" : null,
+	"dir-cur-bld" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+	"dir-cur-src" : "/home/turbotage/Documents/GitHub/HastyRadical",
+	"dir-top-bld" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug",
+	"dir-top-src" : "/home/turbotage/Documents/GitHub/HastyRadical",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/__cmake_cxx23.dir",
+	"sources" : {}
+}
