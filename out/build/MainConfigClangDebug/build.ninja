@@ -223,7 +223,25 @@ build CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o: CXX_COMPILER__HastyRadi
   OBJECT_FILE_DIR = CMakeFiles/HastyRadical.dir/src
   dyndep = CMakeFiles/HastyRadical.dir/CXX.dd
 
-build CMakeFiles/HastyRadical.dir/CXX.dd | CMakeFiles/HastyRadical.dir/CXXModules.json CMakeFiles/HastyRadical.dir/src/main.cpp.o.modmap CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.modmap CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.modmap: CXX_DYNDEP__HastyRadical_Debug CMakeFiles/HastyRadical.dir/src/main.cpp.o.ddi CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.ddi CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.ddi | /home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/CXXDependInfo.json CMakeFiles/__cmake_cxx23.dir/CXXModules.json
+build CMakeFiles/HastyRadical.dir/src/test.cppm.o.ddi: CXX_SCAN__HastyRadical_Debug /home/turbotage/Documents/GitHub/HastyRadical/src/test.cppm || cmake_object_order_depends_target_HastyRadical
+  DEFINES = -DPROJECT_ROOT_DIR=\"/home/turbotage/Documents/GitHub/HastyRadical\"
+  DEP_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o.ddi
+  FLAGS = -g -std=c++23 -ftime-trace
+  OBJ_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o.ddi.i
+
+build CMakeFiles/HastyRadical.dir/src/test.cppm.o: CXX_COMPILER__HastyRadical_scanned_Debug /home/turbotage/Documents/GitHub/HastyRadical/src/test.cppm | CMakeFiles/HastyRadical.dir/src/test.cppm.o.modmap || cmake_object_order_depends_target_HastyRadical CMakeFiles/HastyRadical.dir/CXX.dd
+  CONFIG = Debug
+  DEFINES = -DPROJECT_ROOT_DIR=\"/home/turbotage/Documents/GitHub/HastyRadical\"
+  DEP_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o.d
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles/HastyRadical.dir/src/test.cppm.o.modmap
+  FLAGS = -g -std=c++23 -ftime-trace
+  OBJECT_DIR = CMakeFiles/HastyRadical.dir
+  OBJECT_FILE_DIR = CMakeFiles/HastyRadical.dir/src
+  dyndep = CMakeFiles/HastyRadical.dir/CXX.dd
+
+build CMakeFiles/HastyRadical.dir/CXX.dd | CMakeFiles/HastyRadical.dir/CXXModules.json CMakeFiles/HastyRadical.dir/src/main.cpp.o.modmap CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.modmap CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.modmap CMakeFiles/HastyRadical.dir/src/test.cppm.o.modmap: CXX_DYNDEP__HastyRadical_Debug CMakeFiles/HastyRadical.dir/src/main.cpp.o.ddi CMakeFiles/HastyRadical.dir/src/radlib.cppm.o.ddi CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.ddi CMakeFiles/HastyRadical.dir/src/test.cppm.o.ddi | /home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/CXXDependInfo.json CMakeFiles/__cmake_cxx23.dir/CXXModules.json
 
 
 # =============================================================================
@@ -233,7 +251,7 @@ build CMakeFiles/HastyRadical.dir/CXX.dd | CMakeFiles/HastyRadical.dir/CXXModule
 #############################################
 # Link the executable HastyRadical
 
-build HastyRadical: CXX_EXECUTABLE_LINKER__HastyRadical_Debug CMakeFiles/HastyRadical.dir/src/main.cpp.o CMakeFiles/HastyRadical.dir/src/radlib.cppm.o CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o | lib__cmake_cxx23.a || lib__cmake_cxx23.a
+build HastyRadical: CXX_EXECUTABLE_LINKER__HastyRadical_Debug CMakeFiles/HastyRadical.dir/src/main.cpp.o CMakeFiles/HastyRadical.dir/src/radlib.cppm.o CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o CMakeFiles/HastyRadical.dir/src/test.cppm.o | lib__cmake_cxx23.a || lib__cmake_cxx23.a
   CONFIG = Debug
   FLAGS = -g
   LINK_FLAGS = -fuse-ld=lld-22

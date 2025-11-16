@@ -24,6 +24,8 @@ CMakeFiles/__cmake_cxx23.dir/opt/gcc-15/include/c++/15.2.0/bits/std.cc.o.ddi: \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/cfloat \
   /usr/lib/llvm-22/lib/clang/22/include/float.h \
+  /usr/lib/llvm-22/lib/clang/22/include/__float_header_macro.h \
+  /usr/lib/llvm-22/lib/clang/22/include/__float_float.h \
   /opt/gcc-15/lib/gcc/x86_64-pc-linux-gnu/15.2.0/../../../../include/c++/15.2.0/climits \
   /usr/lib/llvm-22/lib/clang/22/include/limits.h /usr/include/limits.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \

@@ -16,6 +16,16 @@
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		},
+		"CMakeFiles/HastyRadical.dir/src/test.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "CXX_MODULES",
+			"relative-directory" : "src",
+			"source" : "/home/turbotage/Documents/GitHub/HastyRadical/src/test.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
 		"CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o" : 
 		{
 			"bmi-only" : false,

@@ -40,5 +40,17 @@
   "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -O2 -g -DNDEBUG -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o.modmap -o CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm",
   "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/threadpool.cppm",
   "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease/CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -O2 -g -DNDEBUG -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/test.cppm.o.modmap -o CMakeFiles/HastyRadical.dir/src/test.cppm.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/test.cppm",
+  "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/test.cppm",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease/CMakeFiles/HastyRadical.dir/src/test.cppm.o"
+},
+{
+  "directory": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease",
+  "command": "/usr/local/bin/clang++-22-gcc15 --gcc-toolchain=/opt/gcc-15 -DPROJECT_ROOT_DIR=\\\"/home/turbotage/Documents/GitHub/HastyRadical\\\" -O2 -g -DNDEBUG -std=c++23 -ftime-trace @CMakeFiles/HastyRadical.dir/src/containers.cppm.o.modmap -o CMakeFiles/HastyRadical.dir/src/containers.cppm.o -c /home/turbotage/Documents/GitHub/HastyRadical/src/containers.cppm",
+  "file": "/home/turbotage/Documents/GitHub/HastyRadical/src/containers.cppm",
+  "output": "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangRelease/CMakeFiles/HastyRadical.dir/src/containers.cppm.o"
 }
 ]

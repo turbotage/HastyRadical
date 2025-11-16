@@ -17,7 +17,6 @@ export using i32 = std::int32_t;
 export using i64 = std::int64_t;
 export using i128 = __int128_t;      // requires GCC/Clang on
 
-std::vector<u32> precomputed_primes;
 
 export template<typename T>
 concept integral = std::is_same_v<T, i8> || std::is_same_v<T, i16> || std::is_same_v<T, i32> || std::is_same_v<T, i64> || std::is_same_v<T, i128>;
@@ -37,7 +36,7 @@ bool divides_radical(I n, I m);
 
 
 export template<integral I>
-void gamma_isomorphism(std::array<I,4>& mat, I n) {
+void gamma_isomorphism(std::array<I,4>& mat, i32 n) {
     mat[idx(0,0)] -= 1;
     mat[idx(1,1)] -= 1;
 
@@ -48,7 +47,7 @@ void gamma_isomorphism(std::array<I,4>& mat, I n) {
 }
 
 export template<integral I>
-void gamma_isomorphism_inv(std::array<I,4>& mat, I n) {
+void gamma_isomorphism_inv(std::array<I,4>& mat, i32 n) {
     mat[idx(0,0)] *= n;
     mat[idx(0,1)] *= n;
     mat[idx(1,0)] *= n;
@@ -60,8 +59,8 @@ void gamma_isomorphism_inv(std::array<I,4>& mat, I n) {
 
 
 export template<integral I>
-void group_multiplication(const std::array<I,4>& lhs, const std::array<I,4>& rhs, std::array<I,4>& out, I n) {
-    // Unrolled 2x2 matrix multiplication
+void group_multiplication_(const std::array<I,4>& lhs, const std::array<I,4>& rhs, std::array<I,4>& out, i32 n) {
+    // Unrolled 2x2 matrix multiplication, out = X + Y + nXY
     out[idx(0,0)] = n*(lhs[idx(0,0)] * rhs[idx(0,0)] + lhs[idx(0,1)] * rhs[idx(1,0)]);
     out[idx(0,1)] = n*(lhs[idx(0,0)] * rhs[idx(0,1)] + lhs[idx(0,1)] * rhs[idx(1,1)]);
     out[idx(1,0)] = n*(lhs[idx(1,0)] * rhs[idx(0,0)] + lhs[idx(1,1)] * rhs[idx(1,0)]);
@@ -74,26 +73,25 @@ void group_multiplication(const std::array<I,4>& lhs, const std::array<I,4>& rhs
 }
 
 export template<integral I>
-std::array<I,4> group_multiplication(const std::array<I,4>& lhs, const std::array<I,4>& rhs, I n) {
+std::array<I,4> group_multiplication(const std::array<I,4>& lhs, const std::array<I,4>& rhs, i32 n) {
     std::array<I,4> out;
-    group_multiplication(lhs, rhs, out, n);
+    group_multiplication_(lhs, rhs, out, n);
     return out;
 }
 
 export template<integral I>
-void group_inversion(const std::array<I,4>& in, std::array<I,4>& out, I n) {
+void group_inversion_(std::array<I,4>& inout, i32 n) {
     // not correct
-    out[0] = -in[0];
-    out[1] = -in[1];
-    out[2] = -in[2];
-    out[3] = -in[3];
+    I temp = inout[0];
+    inout[0] = inout[3];
+    inout[3] = temp;
+    inout[1] = -inout[1];
+    inout[2] = -inout[2];
 }
 
 export template<integral I>
-std::array<I,4> group_inversion(const std::array<I,4>& in, I n) {
-    std::array<I,4> out;
-    group_inversion(in, out, n);
-    return out;
+void print(const std::array<I,4>& mat) {
+    std::println("[[{}, {}], [{}, {}]]", mat[0], mat[1], mat[2], mat[3]);
 }
 
 export template<integral I>
@@ -112,22 +110,104 @@ std::array<I1,4> cast_matrix(const std::array<I2,4>& in) {
 }
 
 export template<integral I>
-bool check_element(const std::array<I,4>& mat) {
+inline I abs(I x) {
+    return x < 0 ? -x : x;
+}
+
+export enum class SuccessType : u8 {
+    NONE = 0,
+    RAD_31 = 1,
+    RAD_21 = 2,
+    X2_EQ_N = 3,
+    X3_EQ_N = 4
+};
+
+export struct CheckResultRegular {
+    bool success;
+    u8 info;
+};
+
+export template<integral I>
+CheckResultRegular check_element(const std::array<I,4>& mat, i32 n) {
     // not correct
-    if (divides_radical(mat[idx(0,0)], mat[idx(1,0)]))
-        return true;
-    if (divides_radical(mat[idx(1,0)], mat[idx(1,1)]))
-        return true;
-    if (divides_radical(mat[idx(0,1)], mat[idx(1,1)]))
-        return true;
-    return false;
+    if (divides_radical(abs(mat[idx(1,0)]), abs(mat[idx(0,0)])))
+        return {true, (u8)SuccessType::RAD_31};
+    if (divides_radical(abs(mat[idx(0,1)]), abs(mat[idx(0,0)])))
+        return {true, (u8)SuccessType::RAD_21};
+    if (abs(mat[idx(0,1)]) == n)
+        return {true, (u8)SuccessType::X2_EQ_N};
+    if (abs(mat[idx(1,0)]) == n)
+        return {true, (u8)SuccessType::X3_EQ_N};
+    return {false, (u8)SuccessType::NONE};
+}
+
+export enum class SuccessTypeAk : u8 {
+    NONE = 0,
+    LEFT_MULTIPLY = 1,
+    RIGHT_MULTIPLY = 2,
+    LEFT_MULTIPLY_INVERT = 3,
+    RIGHT_MULTIPLY_INVERT = 4
+};
+
+export struct CheckResultAk {
+    bool success;
+    u8 info;
+    u32 k_value;
+};
+
+export template<integral I>
+CheckResultAk check_element_Ak(const std::array<I,4>& mat, i32 n, i32 lower_k, i32 upper_k) {
+
+    std::array<I,4> test_map;
+    for (u16 k = lower_k; k < upper_k; ++k) {
+        test_map[0] = k;
+        test_map[1] = -k*k;
+        test_map[2] = 1;
+        test_map[3] = -k;
+
+        // Left multiply
+        std::array<I,4> result;
+        result = group_multiplication(mat, test_map, n);
+        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::LEFT_MULTIPLY, k};
+        // Right multiply
+        result = group_multiplication(test_map, mat, n);
+        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::RIGHT_MULTIPLY, k};
+        // Invert and left multiply and right multiply
+        group_inversion_(test_map, n);
+        result = group_multiplication(mat, test_map, n);
+        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::LEFT_MULTIPLY_INVERT, k};
+        result = group_multiplication(test_map, mat, n);
+        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::RIGHT_MULTIPLY_INVERT, k};
+    }
+
+    return {false, (u8)SuccessTypeAk::NONE, 0};
+}
+
+export struct CheckResultSeq {
+    bool success;
+    u8 k;
+};
+
+export template<integral I>
+CheckResultSeq check_element_sequence(const std::array<I,4>& mat, i32 n)
+{
+    I x1 = mat[0];
+    I x3 = mat[2];
+    I temp;
+    for (i32 k = 0; k < 6; ++k) {
+        temp = x1 + x3;
+        x3 = n*x1  + 1;
+        x1 = temp;
+
+        if (divides_radical(abs(x3), abs(x1))) {
+            return {true, static_cast<u8>(k)};
+        }
+    }
+    return {false, 0};
 }
 
 
-
-
-
-template<integral I>
+export template<integral I>
 I gcd(I a, I b) {
     while (b) {
         I r = a % b;
@@ -137,21 +217,21 @@ I gcd(I a, I b) {
     return a;
 }
 
-template<integral I>
-bool divides_radical(I n, I m) {
+export template<integral I>
+bool divides_radical(I a, I b) {
+    if (a == 0)
+        return true;
     while (true) {
-        I g = gcd(n, m);
+        I g = gcd(a, b);
         if (g == 1) 
-            return n == 1;
+            return a == 1;
         do {
-            n /= g;
-        } while (n % g == 0);
-        if (n == 1) 
+            a /= g;
+        } while (a % g == 0);
+        if (a == 1) 
             return true;
     }
 }
-
-
 
 
 // ---------- utility functions ----------
@@ -195,6 +275,11 @@ std::vector<std::array<I,4>> load_group_generators(I n) {
             } catch (const std::out_of_range& e) {
                 throw std::runtime_error("Number out of range in generators file: " + line);
             }
+
+            if (val > n*n*n*n*n) {
+                throw std::runtime_error("Generator entry larger than n**5: ");
+            }
+
             current_gen[line_count2 % 4] = val;
             if (line_count2 % 4 == 3) {
                 gamma_isomorphism(current_gen, n);

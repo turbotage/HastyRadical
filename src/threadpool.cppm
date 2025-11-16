@@ -61,7 +61,7 @@ public:
     using Return_Type = std::invoke_result_t<Callable, Args...>;
 
     auto promise = std::promise<Return_Type>{};
-    const auto future = promise.get_future();
+    auto future = promise.get_future();
     {
       const auto guard = std::lock_guard<std::mutex>{lock_};
       tasks_.emplace_back(
@@ -77,6 +77,6 @@ public:
           });
     }
     cv_.notify_one();
-    return future;
+    return std::move(future);
   }
 };

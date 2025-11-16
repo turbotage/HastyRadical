@@ -1,141 +1,83 @@
 
 import std;
 import radlib;
+import threadpool;
+import test;
+import containers;
 
-constexpr int num_threads = 16;
+constexpr int num_threads = 32;
+constexpr int generators_per_thread = 32;
 
 ThreadPool pool(num_threads);
 
-bool check_combination(const std::array<i128,4>& y, i32 last_added_n, std::vector<u32>& totest) -> bool {
-    int multipliers = totest.size();
+void run_gamma_test() {
+        std::println("Hello, Hasty Radical!");
 
-    std::array<i128, 4> totest{}; // Group identity
+    int maxn = 50;
 
-    // We shall have tested all positions of y in the multiplication
-    for (i32 ypos = 0; ypos < multipliers; ++ypos) {
-        // We shall have tested all combinations of inversions of the multiplying generators
-        for (int gi = 0; gi < multipliers; ++gi) {
+    auto run_gamma = [](int n) {
+        auto gens = load_group_generators<i64>(n);
+        std::println("Loaded {} generators for Gamma({})", gens.size(), n);
 
-            // This creates the product
-            for (i = 0; i < multipliers+1; ++i) {
+        auto tgn = TestGammaN(std::move(gens), n, pool, generators_per_thread, num_threads);
 
-                if (i == ypos) {
-                    totest = group_multiplication(totest, y, n);
-                    continue;
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+        tgn.run_initial_check();
+
+        tgn.build_initial_equiv_classes();
+
+        auto classes = tgn.get_equiv_classes_with_bool();
+        
+        std::println("Found {} equivalence classes after initial check for Gamma({})", classes.size(), n);
+        std::println("Successful generators after initial check: {}", tgn.get_successful_generators().size());
+
+        //tgn.run_multiplication_checks();
+
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        auto time_taken = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
+        std::println("Time taken for Gamma({}): {} seconds", n, time_taken);
+
+        for (const auto& [rep, pair] : classes) {
+            const auto& [members, was_successful] = pair;
+            std::println("Equivalence class: representative {}, size {}, was successful: {}", rep, members.size(), was_successful);
+            if (members.size() < 25 && false) {
+                std::print("    Members:");
+                for (i32 m : members) {
+                    std::print("  {}", m);
                 }
-
-                bool should_invert = (1 << i) & ginv_perm;
-
-                auto multip = generators[totest[i]];
-                if (should_invert) {
-                    multip = group_inversion(multip, n);
-                }
-
-                totest = group_multiplication(totest, multip, n);
+                std::println();
             }
-
-            // The product is produced, check it
-            if (check_element(totest)) {
-                return true;
-            }
-
         }
-    }
 
-}
-
-template<typename Func>
-void for_each_combination_with_repetition(size_t k, size_t n, Func callback) {
-    if (n == 0) return;
-    
-    std::vector<u32> indices(n, 0); // Start with [0, 0, 0, ...]
-    
-    while (true) {
-        callback(indices);
-        
-        // Find the rightmost position that can be incremented
-        int pos = static_cast<int>(n) - 1;
-        while (pos >= 0 && indices[pos] == k - 1) {
-            pos--;
-        }
-        
-        if (pos < 0) break; // All combinations generated
-        
-        // Increment this position and reset all positions to its right
-        u32 new_value = indices[pos] + 1;
-        for (u32 i = pos; i < n; ++i) {
-            indices[i] = new_value;
-        }
-    }
-}
-
-void compute_gamma_n(const std::vector<std::array<i64,4>>& generators, int n) {
-
-    std::vector<i32> successful;
-    std::vector<i32> remaining;
-    successful.reserve(generators.size());
-    remaining.reserve(generators.size());
-    for (i32 i = 0; i < generators.size(); ++i) {
-        remaining.push_back(i);
-    }
-
-    auto mhm1 = []()
-
-
-    auto compute_gen_perms = [](u32 index, u32 mult_factor, u32 last_added_n) -> bool {
-        for (u32 i = last_added_n; i < successful.size(); ++i) {
-
+        for (i32 idx : tgn.get_successful_generators()) {
+            //std::println("Generator {} is successful for Gamma({})", idx, n);
         }
     };
 
-    while (remaining.size() > 0) {
+    run_gamma(100);
 
+    /*
+    std::vector<std::future<void>> futures;
+    for (int n = 35; n < maxn; ++n) {
+        futures.emplace_back(pool.Enqueue(run_gamma, n));
+        if (futures.size() > num_threads / 4) {
+            futures.front().get();
+            futures.erase(futures.begin());
+        }
     }
-
+    for (auto& fut : futures)
+    fut.get();
+    
+    std::println("Congratulations! You have computed Gamma(n) for n = 1 to {}", maxn-1);
+    */
+    
 }
 
 
+
 int main() {
-    std::println("Hello, Hasty Radical!");
 
-    int maxn = 100;
-    std::vector<std::array<i64,4>> gen1 = std::async(
-        std::launch::async, 
-        load_group_generators<i64>, 
-        1
-    );
-    for (int i = 1; i < maxn; ++i) {
-        if (i+1 < maxn) {
-            auto gen2 = std::async(
-                std::launch::async, 
-                load_group_generators<i64>, 
-                i+1
-            );
-        }
-        if (i % 2 == 0) {
-            computen(gen2.get(), i);
-        } else {
-            computen(gen1.get(), i);
-        }
-    }
-
-    for (const auto& gen : generators) {
-        std::println("Generator:");
-        for (i32 i = 0; i < 2; ++i) {
-            std::println("  {} {}", gen[i*2], gen[i*2 + 1]);
-        }
-    }
-
-    for (int layer = 0; true; ++layer) {
-        std::println("Layer {}", layer);
-        for (const auto& gen : generators) {
-            std::println("Generator:");
-            for (i32 i = 0; i < 2; ++i) {
-                std::println("  {} {}", gen[i*2], gen[i*2 + 1]);
-            }
-        }
-        if (layer == 2) break; // Just to limit output for this example
-    }
-
+    run_gamma_test();
     return 0;
 }

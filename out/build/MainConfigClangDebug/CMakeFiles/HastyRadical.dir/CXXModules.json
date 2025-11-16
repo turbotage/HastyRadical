@@ -6,6 +6,11 @@
 			"bmi" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/radlib.pcm",
 			"is-private" : false
 		},
+		"test" : 
+		{
+			"bmi" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/test.pcm",
+			"is-private" : false
+		},
 		"threadpool" : 
 		{
 			"bmi" : "/home/turbotage/Documents/GitHub/HastyRadical/out/build/MainConfigClangDebug/CMakeFiles/HastyRadical.dir/threadpool.pcm",
@@ -29,6 +34,11 @@
 			"lookup-method" : "by-name",
 			"path" : "CMakeFiles/__cmake_cxx23.dir/std.compat.pcm"
 		},
+		"test" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/HastyRadical.dir/test.pcm"
+		},
 		"threadpool" : 
 		{
 			"lookup-method" : "by-name",
@@ -44,6 +54,12 @@
 		"std.compat" : 
 		[
 			"std"
+		],
+		"test" : 
+		[
+			"radlib",
+			"std",
+			"threadpool"
 		],
 		"threadpool" : 
 		[

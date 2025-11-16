@@ -9,6 +9,15 @@
         },
         {
           "logical-name": "radlib"
+        },
+        {
+          "logical-name": "threadpool"
+        },
+        {
+          "logical-name": "test"
+        },
+        {
+          "logical-name": "containers"
         }
       ]
     }

@@ -45,5 +45,7 @@ target_sources(HastyRadical
         FILE_SET CXX_MODULES FILES
             "src/radlib.cppm"
             "src/threadpool.cppm"
+            "src/test.cppm"
+            "src/containers.cppm"
 )
 

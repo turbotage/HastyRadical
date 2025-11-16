@@ -1,9 +1,15 @@
 ninja_dyndep_version = 1.0
-build CMakeFiles/HastyRadical.dir/src/main.cpp.o: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm CMakeFiles/HastyRadical.dir/radlib.pcm
+build CMakeFiles/HastyRadical.dir/src/main.cpp.o: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm CMakeFiles/HastyRadical.dir/radlib.pcm CMakeFiles/HastyRadical.dir/threadpool.pcm CMakeFiles/HastyRadical.dir/test.pcm CMakeFiles/HastyRadical.dir/containers.pcm
 
 build CMakeFiles/HastyRadical.dir/src/radlib.cppm.o | CMakeFiles/HastyRadical.dir/radlib.pcm: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm
   restat = 1
 
 build CMakeFiles/HastyRadical.dir/src/threadpool.cppm.o | CMakeFiles/HastyRadical.dir/threadpool.pcm: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm
+  restat = 1
+
+build CMakeFiles/HastyRadical.dir/src/test.cppm.o | CMakeFiles/HastyRadical.dir/test.pcm: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm CMakeFiles/HastyRadical.dir/radlib.pcm CMakeFiles/HastyRadical.dir/threadpool.pcm CMakeFiles/HastyRadical.dir/containers.pcm
+  restat = 1
+
+build CMakeFiles/HastyRadical.dir/src/containers.cppm.o | CMakeFiles/HastyRadical.dir/containers.pcm: dyndep | CMakeFiles/__cmake_cxx23.dir/std.pcm
   restat = 1
 

@@ -9,6 +9,12 @@
         },
         {
           "logical-name": "radlib"
+        },
+        {
+          "logical-name": "threadpool"
+        },
+        {
+          "logical-name": "test"
         }
       ]
     }
