@@ -81,53 +81,66 @@ export SeqSuccessSolution is_sequence_successful(
     return {false, -1, -1};
 }
 
-export struct MultSuccessSolution {
+export struct MultAndAkSuccessSolution {
     i32 mult_successful_genidx;
-    i32 multiplier_genidx;
+    i32 multiplier1_genidx;
+    i32 multiplier2_genidx;
     MultResult mult_result;
 };
 
-export MultSuccessSolution is_mult_successful(
+export MultAndAkSuccessSolution is_mult_successful(
     const std::vector<i32>& class_members,
     const GeneratorsState& gen_state
 ) {
 
-    auto member_checker = [&gen_state](i32 member) 
-        -> MultSuccessSolution
+    // The member checker takes two successful generators and 
+    //
+    auto member_checker = [&class_members, &gen_state](i32 mat1_idx, i32 mat2_idx)
+        -> MultAndAkSuccessSolution
     {
-        MultSuccessSolution result;
-        
-        auto mat1 = cast_matrix<i128>(gen_state.generators[member]);
-        std::vector<std::array<i128,4>> factors(3);
-        factors[0] = mat1;
-        for (i32 succ : gen_state.successful) {
-            factors[1] = cast_matrix<i128>(gen_state.generators[succ]);
+        MultAndAkSuccessSolution result;
+         
+        std::vector<std::array<i128,4>> factors(4);
+
+        factors[1] = cast_matrix<i128>(gen_state.generators[mat1_idx]);
+        factors[2] = cast_matrix<i128>(gen_state.generators[mat2_idx]);
+
+        for (i32 midx : class_members) {
+
+            factors[0] = cast_matrix<i128>(gen_state.generators[midx]);
 
             for (i32 k = 0; k < gen_state.n+1; ++k) {
-                factors[2][0] = k;
-                factors[2][1] = -k*k;
-                factors[2][2] = 1;
-                factors[2][3] = -k;
+                factors[3][0] = k;
+                factors[3][1] = -k*k;
+                factors[3][2] = 1;
+                factors[3][3] = -k;
 
                 result.mult_result = check_one_mult<i128>(factors);
                 if (result.mult_result.success) {
-                    result.mult_successful_genidx = member;
-                    result.multiplier_genidx = succ;
+                    result.mult_successful_genidx = midx;
+                    result.multiplier1_genidx = mat1_idx;
+                    result.multiplier2_genidx = mat2_idx;
                     return result;
                 }
             }
 
         }
-        return {-1, -1, {}};
+        return {-1, -1, -1, {}};
     };
 
-    MultSuccessSolution result;
+    MultAndAkSuccessSolution result;
 
-    int members_size = class_members.size();
+    i32 succ_size = gen_state.successful.size();
     std::deque<std::future<bool>> futures;
-    for (int midx = 0; midx < members_size; ++midx) {
+    // iterate over all permutations of 2 successful generators
+    for (i32 succ_idx1 = 0; succ_idx1 < succ_size; ++succ_idx1) {
+    for (i32 succ_idx2 = succ_idx1; succ_idx2 < succ_size; ++succ_idx2) {
+
+        i32 mat1_idx = gen_state.successful[succ_idx1];
+        i32 mat2_idx = gen_state.successful[succ_idx2];
+
         futures.push_back(gen_state.tp.Enqueue(
-            member_checker, class_members[midx]
+            member_checker, mat1_idx, mat2_idx
         ));
         if (futures.size() >= 8) {
             result = futures.front().get();
@@ -136,7 +149,7 @@ export MultSuccessSolution is_mult_successful(
                 break;
             }
         }
-    }
+    }}
     while (!futures.empty()) {
         if (!result.mult_result.success) {
             result = futures.front().get();
@@ -147,5 +160,10 @@ export MultSuccessSolution is_mult_successful(
     }
     return result;
 }
+
+
+
+
+
 
 }

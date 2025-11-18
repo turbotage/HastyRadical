@@ -20,6 +20,7 @@ struct CheckResult {
 };
 
 enum class SuccessType : u8 {
+	NONE = 0,
 	SUCCESS_BY_EQUIVALENCE = 1,
 	SUCCESS_BY_INITIAL_TEST = 2,
 	SUCCESS_BY_AK_TEST = 3,
@@ -39,19 +40,14 @@ export class TestGammaN {
 private:
 	i32 _n;
 	std::vector<std::array<i64,4>> _generators;
-	std::vector<i32> _successful;
-	std::vector<i32> _remaining;
+	std::unordered_set<i32> _successful;
+	std::unordered_set<i32> _remaining;
 	std::vector<CheckResult> _check_results;
 
 	UnionFind _equiv_classes;
 
-	std::vector<std::future<std::vector<i32>>> futures;
-
 	ThreadPool _pool;
 	ThreadPool _local_pool;
-
-	std::vector<i32> _temp1;
-	std::vector<i32> _temp2
 
 	GeneratorsState _generators_state;
 
@@ -108,53 +104,54 @@ public:
         };
 
         // Test all remaining generators
-        for (i32 remidx = 0; remidx < _remaining.size(); remidx += _generators_per_thread) {
-            // We let each thread handle a batch of size generators_per_thread
-            // Add a batch onto the thread pool
+		std::deque<std::future<std::vector<i32>>> futures;
+        for (i32 remidx = 0; remidx < _remaining.size(); remidx += 50) {
             futures.emplace_back(_pool.Enqueue(
                 first_caller, remidx
             ));
         }
+		while (futures.size() > 0) {
+			auto local_successful = futures.front().get();
+			futures.pop_front();
+			_successful.insert(
+				_successful.end(),
+				local_successful.begin(),
+				local_successful.end()
+			);
+			_remaining.erase(
+				local_successful.begin(),
+				local_successful.end()
+			);
+		}
+	}
 
-        i32 new_successful_count = move_remaining_to_successful();
-        if (new_successful_count == 0) {
-            throw std::runtime_error("No successful generators found in initial test");
-        }
-        
-        futures.clear();
-    }
-
-	auto build_initial_equiv_classes() 
-		-> std::unordered_map<i32, std::pair<std::vector<i32>, bool>>
+	void build_initial_equiv_classes() 
 	{
 		i32 gen_size = _generators.size();
 
 		std::unordered_map<i64, std::vector<i32>> same_map;
-		same_map.clear();
+		//same_map.clear();
 
-		// Same signed x1
-		{
-			for (i32 i = 0; i < gen_size; ++i) {
-				i64 x1 = _generators[i][0];
-				same_map[x1].push_back(i);
-			}
+		// Same signed x1
+		for (i32 i = 0; i < gen_size; ++i) {
+			i64 x1 = _generators[i][0];
+			same_map[x1].push_back(i);
+		}
+		for (const auto& [x1, indices] : same_map) {
+			i32 indsize = indices.size();
+			for (i32 i = 0; i < indsize; ++i) {
+				for (i32 j = 0; j < indsize; ++j) {
+					if (i == j) {
+						continue;
+					}
+					auto gen1 = _generators[indices[i]];
+					auto gen2 = _generators[indices[j]];
 
-			for (const auto& [x1, indices] : same_map) {
-				i32 indsize = indices.size();
-				for (i32 i = 0; i < indsize; ++i) {
-					for (i32 j = 0; j < indsize; ++j) {
-						if (i == j) {
-							continue;
-						}
-						auto gen1 = _generators[indices[i]];
-						auto gen2 = _generators[indices[j]];
-
-						if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
-							_equiv_classes.unite(indices[i], indices[j]);
-						} else if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
-							_equiv_classes.unite(indices[i], indices[j]);
-							std::println("Simon was wrong");
-						}
+					if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
+						_equiv_classes.unite(indices[i], indices[j]);
+					} else if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
+						_equiv_classes.unite(indices[i], indices[j]);
+						std::println("Simon was wrong");
 					}
 				}
 			}
@@ -162,171 +159,102 @@ public:
 		same_map.clear();
 
 		// Same x3 or x2
-		{
-			for (i32 i = 0; i < gen_size; ++i) {
-				i64 x2 = _generators[i][1];
-				i64 x3 = _generators[i][2];
-				same_map[abs(x3)].push_back(i);
-				same_map[abs(x2)].push_back(i);
-			}
+		for (i32 i = 0; i < gen_size; ++i) {
+			i64 x2 = _generators[i][1];
+			i64 x3 = _generators[i][2];
+			same_map[abs(x3)].push_back(i);
+			same_map[abs(x2)].push_back(i);
+		}
+		for (const auto& [x2_or_x3, indices] : same_map) {
+			i32 indsize = indices.size();
+			for (i32 i = 0; i < indsize; ++i) {
+				for (i32 j = 0; j < indsize; ++j) {
+					if (i == j) continue;
+					auto gen1 = _generators[indices[i]];
+					auto gen2 = _generators[indices[j]];
 
-			for (const auto& [x2_or_x3, indices] : same_map) {
-				i32 indsize = indices.size();
-				for (i32 i = 0; i < indsize; ++i) {
-					for (i32 j = 0; j < indsize; ++j) {
-						if (i == j) continue;
-						auto gen1 = _generators[indices[i]];
-						auto gen2 = _generators[indices[j]];
-
-						if (divides_radical(abs(x2_or_x3), abs(gen1[0] - gen2[0]))) {
-							_equiv_classes.unite(indices[i], indices[j]);
-						}
-
+					if (divides_radical(abs(x2_or_x3), abs(gen1[0] - gen2[0]))) {
+						_equiv_classes.unite(indices[i], indices[j]);
 					}
+
 				}
 			}
 		}
 		same_map.clear();
 
 		// Same signed x4
-		{
-			for (i32 i = 0; i < gen_size; ++i) {
-				i64 x4 = _generators[i][3];
-				same_map[x4].push_back(i);
-			}
+		for (i32 i = 0; i < gen_size; ++i) {
+			i64 x4 = _generators[i][3];
+			same_map[x4].push_back(i);
+		}
 
-			for (const auto& [x4, indices] : same_map) {
-				i32 indsize = indices.size();
-				for (i32 i = 0; i < indsize; ++i) {
-					for (i32 j = 0; j < indsize; ++j) {
-						if (i == j) continue;
-						auto gen1 = _generators[indices[i]];
-						auto gen2 = _generators[indices[j]];
+		for (const auto& [x4, indices] : same_map) {
+			i32 indsize = indices.size();
+			for (i32 i = 0; i < indsize; ++i) {
+				for (i32 j = 0; j < indsize; ++j) {
+					if (i == j) continue;
+					auto gen1 = _generators[indices[i]];
+					auto gen2 = _generators[indices[j]];
 
-						if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
-							_equiv_classes.unite(indices[i], indices[j]);
-						} else if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
-							_equiv_classes.unite(indices[i], indices[j]);
-							std::println("Simon was wrong");
-						}
+					if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
+						_equiv_classes.unite(indices[i], indices[j]);
+					} else if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
+						_equiv_classes.unite(indices[i], indices[j]);
+						std::println("Simon was wrong");
 					}
 				}
 			}
 		}
-
-		std::vector<i32> new_successful;
-		new_successful.reserve(_generators.size());
-
-		std::unordered_map<i32, std::pair<std::vector<i32>, bool>> result;
-        auto classes = get_equiv_classes();
-
-		result.reserve(classes.size());
-
-        i32 class_counter = 0;
-        for (const auto& [rep, members] : classes) {
-            class_counter++;
-            bool was_successful = false;
-            for (i32 midx = 0; midx < members.size(); ++midx) {
-                for (i32 succ : _successful) {
-                    if (members[midx] == succ) {
-                        was_successful = true;
-                        std::println("generator class {} had initial successful, class size is {}", rep, members.size());
-                        break;
-                    }
-                }
-                if (was_successful) {
-					break;
-				}
-            }
-
-			if (!was_successful) {
-				std::vector<i32> test_k_vals = {1, _n, _n*_n+1, 2*_n*_n};
-				for (i32 kidx = 0; kidx < test_k_vals.size()-1; ++kidx) {
-					for (i32 midx = 0; midx < members.size(); ++midx) {
-						auto mat = cast_matrix<i128>(_generators[members[midx]]);
-						auto ret = check_element_Ak(mat, _n, test_k_vals[kidx], test_k_vals[kidx+1]);
-						if (ret.success) {
-							was_successful = true;
-							std::println(
-								"Gen class {}, successful via Ak, k={}, multype={}, member_idx={}, class size is {}", 
-								rep, ret.k_value, ret.info, midx, members.size()
-							);
-							break;
-						}
-					}
-					if (was_successful) {
-						break;
-					}
-				}
-			}
-
-			if (!was_successful) {
-				for (const auto& member : members) {
-					auto mat = cast_matrix<i128>(_generators[member]);
-					auto res = check_element_sequence(mat, _n);
-					if (res.success) {
-						was_successful = true;
-						std::println(
-							"Gen class {}, successful via Seq check, k={}, class size is {}", 
-							rep, res.k, members.size()
-						);
-						break;
-					}
-				}
-			}
-
-			if (!was_successful) {
-				int members_size = members.size();
-				for (int midx = 0; midx < members_size; ++midx) {
-					int nextidx = (midx + 1) % members_size;
-					auto mat1 = cast_matrix<i128>(_generators[members[midx]]);
-					auto mat2 = cast_matrix<i128>(_generators[members[nextidx]]);
-					auto prod = group_multiplication(mat1, mat2, _n);
-					if (check_element(prod, _n).success) {
-						was_successful = true;
-						std::println(
-							"Gen class {}, successful via pairwise mult, members {}, {}, class size is {}", 
-							rep, members[midx], members[nextidx], members.size()
-						);
-						break;
-					}
-					auto ret = check_element_Ak(prod, _n, 1, _n);
-					if (ret.success) {
-						was_successful = true;
-						std::println(
-							"Gen class {}, successful via Ak on pairwise mult, k={}, multype={}, members {}, {}, class size is {}", 
-							rep, ret.k_value, ret.info, members[midx], members[nextidx], members.size()
-						);
-						break;
-					}
-				}
-			}
-
-			if (was_successful) {
-				_equiv_classes.set_val(rep, true);
-				for (const auto& member : members) {
-					new_successful.push_back(member);
-				}
-			}
-        }
-
-		futures.clear();
-
-		std::promise<std::vector<i32>> promise;
-		promise.set_value(new_successful);
-		futures.push_back(promise.get_future());
-
-		move_remaining_to_successful();
-
-		return result;
 	}
 
-	auto non_mult_class_tests(std::vector<i32>& class_members)
+	auto non_mult_class_tests(const std::vector<i32>& class_members)
+		-> SuccessState
 	{
-		InitialSuccessSolution result = test_initial_success_in_class(
+		InitialSuccessSolution result = class_tests::is_initial_successful(
 			class_members, 
 			_generators_state
 		);
+		if (result.success) {
+			return {SuccessType::SUCCESS_BY_INITIAL_TEST, result, {}, {}, {}};
+		}
+
+		AkSuccessSolution ak_result = class_tests::is_Ak_successful(
+			class_members, 
+			_generators_state
+		);
+		if (ak_result.success) {
+			return {SuccessType::SUCCESS_BY_AK_TEST, {}, ak_result, {}, {}};
+		}
+
+		SeqSuccessSolution seq_result = class_tests::is_sequence_successful(
+			class_members, 
+			_generators_state
+		);
+		if (seq_result.success) {
+			return {SuccessType::SUCCESS_BY_SEQUENCE_TEST, {}, {}, seq_result, {}};
+		}
+
+		return {SuccessType::NONE, {}, {}, {}, {}};
+	}
+
+	void run_non_mult_class_tests()
+	{
+		auto class_map = get_equiv_classes_with_bool();
+
+		std::deque<std::future<SuccessState>> local_futures;
+		for (const auto& [rep, class_info] : class_map) {
+			if (class_info.second) {
+				continue;
+			}
+			local_futures.push_back(
+				_local_pool.Enqueue(
+					[this](std::vector<i32> class_members) {
+						return non_mult_class_tests(class_members);
+					}, 
+					class_info.first
+				)
+			);
+		}
 
 	}
 
@@ -371,43 +299,6 @@ public:
 	}
 
 private:
-
-	i32 move_remaining_to_successful() 
-	{
-		_temp1.clear();
-		// Collect results from all threads
-		for (auto& fut : futures) {
-			auto local_successful = fut.get();
-			_temp1.insert(
-				_temp1.end(), 
-				local_successful.begin(), 
-				local_successful.end()
-			);
-		}
-
-		// Merge new successful into successful
-		_successful.insert(
-			_successful.end(), 
-			_temp1.begin(), 
-			_temp1.end()
-		);
-		// Fix performance later
-		std::set<i32> temp_succ(_successful.begin(), _successful.end());
-		_successful = std::vector<i32>(temp_succ.begin(), temp_succ.end());
-
-		std::set_difference(
-			_remaining.begin(), _remaining.end(),
-			_temp1.begin(), _temp1.end(),
-			std::back_inserter(_temp2)
-		);
-
-		_remaining.swap(_temp2);
-		_temp2.clear();
-
-
-		return _temp1.size();
-	}
-
 
 
 };
