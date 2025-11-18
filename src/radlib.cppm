@@ -178,6 +178,7 @@ CheckResultAk check_element_Ak(const std::array<I,4>& mat, i32 n, i32 lower_k, i
         if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::LEFT_MULTIPLY_INVERT, k};
         result = group_multiplication(test_map, mat, n);
         if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::RIGHT_MULTIPLY_INVERT, k};
+    
     }
 
     return {false, (u8)SuccessTypeAk::NONE, 0};

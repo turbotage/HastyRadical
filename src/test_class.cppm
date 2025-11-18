@@ -1,6 +1,5 @@
 module;
 
-#include <unordered_map>
 export module test;
 
 import std;
@@ -8,52 +7,7 @@ import radlib;
 import threadpool;
 import containers;
 
-constexpr std::vector<std::vector<i32>> all_permutations(i32 n) {
-	std::vector<i32> base(n);
-	std::iota(base.begin(), base.end(), 0); // Fill with [0, 1, ..., n-1]
-
-	std::vector<std::vector<i32>> result;
-
-	do {
-		result.push_back(base);
-	} while (std::next_permutation(base.begin(), base.end()));
-	
-	return result;
-}
-
-std::vector<std::vector<std::vector<i32>>> global_perms = {
-	all_permutations(1), all_permutations(2), 
-	all_permutations(3), all_permutations(4)
-};
-
-template<typename Func>
-bool for_each_combination_with_repetition(i32 k, i32 n, Func callback) {
-	if (n == 0)
-		throw std::invalid_argument("n must be greater than 0");
-	
-	std::vector<i32> indices(n, 0); // Start with [0, 0, 0, ...]
-	
-	while (true) {
-		if (callback(indices)) {
-			return true;
-		}
-		
-		// Find the rightmost position that can be incremented
-		int pos = static_cast<int>(n) - 1;
-		while (pos >= 0 && indices[pos] == k - 1) {
-			pos--;
-		}
-		
-		if (pos < 0) break; // All combinations generated
-		
-		// Increment this position and reset all positions to its right
-		i32 new_value = indices[pos] + 1;
-		for (i32 i = pos; i < n; ++i) {
-			indices[i] = new_value;
-		}
-	}
-	return false;
-}
+import tests;
 
 
 struct CheckResult {
@@ -65,6 +19,22 @@ struct CheckResult {
 	std::vector<i32> gens_permutation;
 };
 
+enum class SuccessType : u8 {
+	SUCCESS_BY_EQUIVALENCE = 1,
+	SUCCESS_BY_INITIAL_TEST = 2,
+	SUCCESS_BY_AK_TEST = 3,
+	SUCCESS_BY_SEQUENCE_TEST = 4,
+	SUCCESS_BY_MULT_TEST = 5
+};
+
+struct SuccessState {
+	SuccessType success_type;
+	std::optional<InitialSuccessSolution> initial_success_solution;
+	std::optional<AkSuccessSolution> ak_success_solution;
+	std::optional<SeqSuccessSolution> seq_success_solution;
+	std::optional<MultSuccessSolution> mult_success_solution;
+};
+
 export class TestGammaN {
 private:
 	i32 _n;
@@ -73,21 +43,21 @@ private:
 	std::vector<i32> _remaining;
 	std::vector<CheckResult> _check_results;
 
-
 	UnionFind _equiv_classes;
 
 	std::vector<std::future<std::vector<i32>>> futures;
 
-	i32 _generators_per_thread = 32;
-	i32 _number_of_threads = 8;
-
-	ThreadPool& _pool;
+	ThreadPool _pool;
+	ThreadPool _local_pool;
 
 	std::vector<i32> _temp1;
-	std::vector<i32> _temp2;
+	std::vector<i32> _temp2
+
+	GeneratorsState _generators_state;
+
 public:
 
-	TestGammaN(std::vector<std::array<i64,4>>&& gens, i32 n, ThreadPool& pool, i32 generators_per_thread = 32, i32 number_of_threads = 8)
+	TestGammaN(std::vector<std::array<i64,4>>&& gens, i32 n)
 		: _n(n), 
 		_generators(std::move(gens)), 
 		_successful(), 
@@ -95,13 +65,21 @@ public:
 		_check_results(_generators.size()),
 		_generators_per_thread(generators_per_thread),
 		_number_of_threads(number_of_threads),
-		_pool(pool),
-		_equiv_classes(_generators.size())
+		_pool(4),
+		_local_pool(8),
+		_equiv_classes(_generators.size()),
+		_generators_state(
+			{_generators, _successful, _remaining, _n, _local_pool}
+		)
 	{
 		_successful.reserve(_remaining.size());
 		futures.reserve((_remaining.size() + _generators_per_thread - 1) / _generators_per_thread);
 		_temp1.reserve(_remaining.size());
 		_temp2.reserve(_remaining.size());
+	}
+
+	GeneratorsState& get_generators_state() {
+		return _equiv_classes;
 	}
 
 	std::unordered_map<i32, std::vector<i32>> get_equiv_classes() {
@@ -297,6 +275,33 @@ public:
 				}
 			}
 
+			if (!was_successful) {
+				int members_size = members.size();
+				for (int midx = 0; midx < members_size; ++midx) {
+					int nextidx = (midx + 1) % members_size;
+					auto mat1 = cast_matrix<i128>(_generators[members[midx]]);
+					auto mat2 = cast_matrix<i128>(_generators[members[nextidx]]);
+					auto prod = group_multiplication(mat1, mat2, _n);
+					if (check_element(prod, _n).success) {
+						was_successful = true;
+						std::println(
+							"Gen class {}, successful via pairwise mult, members {}, {}, class size is {}", 
+							rep, members[midx], members[nextidx], members.size()
+						);
+						break;
+					}
+					auto ret = check_element_Ak(prod, _n, 1, _n);
+					if (ret.success) {
+						was_successful = true;
+						std::println(
+							"Gen class {}, successful via Ak on pairwise mult, k={}, multype={}, members {}, {}, class size is {}", 
+							rep, ret.k_value, ret.info, members[midx], members[nextidx], members.size()
+						);
+						break;
+					}
+				}
+			}
+
 			if (was_successful) {
 				_equiv_classes.set_val(rep, true);
 				for (const auto& member : members) {
@@ -316,46 +321,13 @@ public:
 		return result;
 	}
 
-	void run_multiplication_checks() 
+	auto non_mult_class_tests(std::vector<i32>& class_members)
 	{
-		i32 last_successful_size = 0;
-		i32 mult_level = 1;
+		InitialSuccessSolution result = test_initial_success_in_class(
+			class_members, 
+			_generators_state
+		);
 
-		while (_remaining.size() > 0) {
-			if (mult_level > 2) {
-				throw std::runtime_error("Multiplication level exceeded two multiplications");
-			}
-
-			// Test all remaining generators
-			for (i32 rem = 0; rem < _remaining.size(); rem += _generators_per_thread) {
-				// We let each thread handle a batch of size generators_per_thread
-				// Add a batch onto the thread pool
-				futures.emplace_back(_pool.Enqueue(
-					std::bind(&TestGammaN::compute_many, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-					rem,
-					last_successful_size,
-					mult_level
-				));
-			}
-
-			//Set last successful size before we modify successful
-			last_successful_size = _successful.size();
-
-			i32 new_successful_count = move_remaining_to_successful();
-			// If no new successful found, increase multiplication level
-			if (new_successful_count == 0) {
-				// No new successful found at this multiplication level, increase level
-				mult_level++;
-				last_successful_size = 0; // We want to try all successful at the new level
-			} else {
-				// We found new successful, reset multiplication level
-				mult_level = 1;
-			}
-
-			futures.clear();
-		}
-
-		std::println("Gamma({}) succeeded", _n);
 	}
 
 	const std::vector<CheckResult>& get_check_results() const 
@@ -436,161 +408,7 @@ private:
 		return _temp1.size();
 	}
 
-	std::vector<i32> compute_many(
-		i32 start_idx,
-		i32 last_successful_size,
-		i32 mult_level
-	) 
-	{
-		std::vector<i32> local_successful;
-		local_successful.reserve(_generators_per_thread);
-		
-		// The thread should handle a batch of size generators_per_thread, or less if at the end
-		i32 idxmax = std::min(start_idx + _generators_per_thread, (i32)_remaining.size());
-		for (i32 idx = start_idx; idx < idxmax; ++idx) {
-			// If n < 50 and each entry in the generators is less than n**2, we can use i64
-			if (compute_one<i128>(_remaining[idx], last_successful_size, mult_level))
-				local_successful.push_back(_remaining[idx]);
 
-		}
-		return local_successful;
-	}
-
-	template<integral I>
-	bool compute_one(
-		i32 test_index,
-		i32 last_successful_size,
-		i32 mult_level
-	) {
-		std::vector<std::array<I,4>> multipliers(mult_level);
-		std::vector<i32> multiplier_indices(mult_level);
-		return for_each_combination_with_repetition(
-			_successful.size(), mult_level, [&](const std::vector<i32>& indices) {
-			// We have 1 multiplier that is always taken from a index >= last_added_n, we don't want to recheck already tested combinations
-			// Then we have mult_level multipliers that can be taken from any successful generator
-			int mindex;
-			for (i32 i = last_successful_size; i < _successful.size(); ++i) {
-
-				mindex = _successful[i];
-				multiplier_indices[0] = mindex;
-				multipliers[0] = cast_matrix<I>(_generators[mindex]);
-
-				for (i32 j = 0; j < mult_level-1; ++j) {
-					mindex = _successful[indices[j]];
-					multiplier_indices[j+1] = mindex;
-					multipliers[j+1] = cast_matrix<I>(_generators[mindex]);
-				}
-				if (check_combination(
-						cast_matrix<I>(_generators[test_index]), 
-						multipliers, 
-						multiplier_indices, 
-						_check_results[test_index]
-					)) 
-				{
-					return true;
-				}
-			}
-			return false;
-		});
-	}
-
-	struct CheckMultResult {
-		bool success;
-	};
-
-	template<integral I>
-	CheckMultResult check_one_mult(
-		const std::vector<i32>& multiplier_indices
-	) 
-	{
-		int num_mult = multiplier_indices.size();
-		auto perms = global_perms[num_mult];
-
-		for (auto& p : perms) {
-			for (i32 gi = 0; gi < (1 << num_mult); ++gi) {
-				std::array<I, 4> totest{}; // Group identity
-				// We create the product
-				for (i32 pos = 0; pos < num_mult; ++pos) {
-					bool should_invert = (1 << pos) & gi;
-
-					auto multip = cast_matrix<I>(_generators[multiplier_indices[p[pos]]]);
-					if (should_invert) {
-						group_inversion_(multip, _n);
-					}
-
-					totest = group_multiplication(totest, multip, _n);
-
-					if (pos < num_mult - 1 && ((1 << (pos+1)) & gi)) {
-						// Intermediate check
-						if (check_element(totest, _n).success) {
-							return { true };
-						}
-					}
-				}
-
-				// The product is produced, check it
-				if (check_element(totest, _n).success) {
-					return { true };
-				}
-			}
-		}
-
-	}
-
-	template<integral I>
-	bool check_combination(
-		const std::array<I,4>& y, 
-		const std::vector<std::array<I,4>>& multipliers, 
-		const std::vector<i32>& multiplier_indices, 
-		CheckResult& cr
-	) {
-		int num_multipliers = multipliers.size();
-
-		auto& perms = global_perms[num_multipliers-1];
-
-		std::array<I, 4> totest{}; // Group identity
-		// y x1 x2
-		for (auto& p : perms) {
-			// We shall have tested all positions of y in the multiplication
-			for (i32 ypos = 0; ypos < num_multipliers+1; ++ypos) {
-				// We shall have tested all combinations of inversions of the multiplying generators
-				for (i32 gi = 0; gi < (1 << num_multipliers); ++gi) {
-					// This creates the product
-					for (i32 pos = 0; pos < num_multipliers+1; ++pos) {
-
-						if (pos == ypos) {
-							totest = group_multiplication(totest, y, _n);
-							continue;
-						}
-
-						bool should_invert = (1 << (pos < ypos ? pos : pos-1)) & gi;
-
-						auto multip = multipliers[p[pos < ypos ? pos : pos-1]];
-						if (should_invert) {
-							group_inversion_(multip, _n);
-						}
-
-						totest = group_multiplication(totest, multip, _n);
-					}
-					// We increment the count of products tested
-					++cr.products_tested;
-
-					// The product is produced, check it
-					if (check_element(totest, _n).success) {
-						cr.inversion_permutation_at_success = gi;
-						cr.ypos_at_success = ypos;
-						cr.gens_giving_success = multiplier_indices;
-						cr.gens_permutation = p;
-						return true;
-					}
-
-					totest = {}; // Same as group identity
-				}
-
-			}
-		}
-		return false;
-	}
 
 };
 

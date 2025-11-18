@@ -179,6 +179,57 @@ app = dash.Dash(__name__)
 gamma_data = load_all_gamma_stats()
 summary_df = create_summary_dataframe(gamma_data)
 
+# Load generator matrices
+def gamma_isomorphism_np(mat: np.ndarray, n: int) -> np.ndarray:
+    """
+    Apply the gamma_isomorphism transformation to a 2x2 numpy matrix (in-place).
+    mat: shape (2,2), dtype np.int64
+    """
+    mat = mat.copy()
+    mat[0,0] -= 1
+    mat[1,1] -= 1
+    mat[0,0] //= n
+    mat[0,1] //= n
+    mat[1,0] //= n
+    mat[1,1] //= n
+    return mat
+
+def load_generator_matrices():
+    """
+    Load 2x2 matrices for each generator for each n.
+    Expects files: generators/gamma_{n}_generators.txt
+    Each generator: 4 lines (x11, x12, x21, x22)
+    Applies gamma_isomorphism to each matrix.
+    """
+    matrices = {}
+    pattern = "generators/gamma_*_generators.txt"
+    for filename in glob.glob(pattern):
+        try:
+            basename = os.path.basename(filename)
+            n = int(basename.split('_')[1])
+            with open(filename, 'r') as f:
+                lines = [line.strip() for line in f if line.strip()]
+                matrices[n] = []
+                for i in range(0, len(lines), 4):
+                    if i + 3 >= len(lines):
+                        break
+                    try:
+                        # Use np.int64 for all values
+                        x11 = np.int64(lines[i])
+                        x12 = np.int64(lines[i+1])
+                        x21 = np.int64(lines[i+2])
+                        x22 = np.int64(lines[i+3])
+                        mat = np.array([[x11, x12], [x21, x22]], dtype=np.int64)
+                        mat = gamma_isomorphism_np(mat, n)
+                        matrices[n].append(mat)
+                    except Exception as e:
+                        print(f"Error parsing generator matrix for n={n} at lines {i}-{i+3}: {e}")
+        except Exception as e:
+            print(f"Error loading generator matrices from {filename}: {e}")
+    return matrices
+
+generator_matrices = load_generator_matrices()
+
 if gamma_data:
     print(f"Found data for: {sorted(gamma_data.keys())}")
 else:
@@ -236,6 +287,17 @@ app.layout = html.Div([
             style={'width': '300px'}
         )
     ], style={'marginBottom': 20}),
+    # --- NEW: Generator matrix viewer ---
+    html.Div([
+        html.Label('Enter Generator Index to view its 2x2 matrix:'),
+        dcc.Input(
+            id='matrix-generator-index-input',
+            type='number',
+            placeholder='Generator index',
+            style={'width': '120px', 'marginLeft': '10px'}
+        ),
+        html.Div(id='generator-matrix-display', style={'marginTop': '10px'})
+    ], style={'marginBottom': 30}),
     
     # Detailed analysis for selected n
     html.Div(id='detailed-analysis'),
@@ -836,14 +898,34 @@ def display_click_data(clickData, selected_n):
     
     return html.Div()
 
+@app.callback(
+    Output('generator-matrix-display', 'children'),
+    [Input('matrix-generator-index-input', 'value'),
+     Input('n-selector', 'value')]
+)
+def show_generator_matrix(generator_index, selected_n):
+    if selected_n is None or generator_index is None:
+        return html.Div()
+    if selected_n not in generator_matrices:
+        return html.Div("No generator matrix data for this n.")
+    matrices = generator_matrices[selected_n]
+    if generator_index < 0 or generator_index >= len(matrices):
+        return html.Div(f"Generator index must be between 0 and {len(matrices)-1}")
+    mat = matrices[generator_index]
+    # Format as a table
+    return html.Table([
+        html.Tr([html.Td(str(mat[0,0])), html.Td(str(mat[0,1]))]),
+        html.Tr([html.Td(str(mat[1,0])), html.Td(str(mat[1,1]))])
+    ], style={'border': '1px solid black', 'marginTop': '5px', 'fontSize': '18px', 'textAlign': 'center'})
+
 if __name__ == '__main__':
     if not gamma_data:
         print("No gamma_*_stat.txt files found in current directory!")
         print("Make sure to run your C++ program to generate the statistics files first.")
     else:
-        port = int(os.getenv('PORT', '8050'))
+        port = int(os.getenv('PORT', '8051'))
         print(f"Loaded data for Gamma(n) where n = {sorted(gamma_data.keys())}")
         print(f"Starting Dash app on http://127.0.0.1:{port} (and accessible on your LAN at http://<your-ip>:{port})")
     
     # Bind to all interfaces so it's reachable outside localhost; allow overriding port via PORT env var
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8050')), debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8051')), debug=True)

@@ -41,10 +41,14 @@ void run_gamma_test() {
         for (const auto& [rep, pair] : classes) {
             const auto& [members, was_successful] = pair;
             std::println("Equivalence class: representative {}, size {}, was successful: {}", rep, members.size(), was_successful);
-            if (members.size() < 25 && false) {
+            if (!was_successful) {
                 std::print("    Members:");
-                for (i32 m : members) {
-                    std::print("  {}", m);
+                for (int i = 0; i < members.size(); ++i) {
+                    if (i % 20 == 0){
+                        std::println();
+                        std::print("        ");
+                    }
+                    std::print("  {}", members[i]);
                 }
                 std::println();
             }
