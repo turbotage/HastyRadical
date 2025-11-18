@@ -43,9 +43,11 @@ include(FetchContent)
 target_sources(HastyRadical
     PUBLIC 
         FILE_SET CXX_MODULES FILES
-            "src/radlib.cppm"
-            "src/threadpool.cppm"
-            "src/test.cppm"
             "src/containers.cppm"
+            "src/mult_test.cppm"
+            "src/radlib.cppm"
+            "src/test_class.cppm"
+            "src/threadpool.cppm"
+            "src/tests.cppm"
 )
 
