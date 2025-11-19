@@ -191,9 +191,9 @@ export std::vector<i32> gens_in_successful_mult(
         -1
     };
     std::vector<i32> result;
-    for (i32 i = 0; i < 4; ++i) {
-        i32 possible_factor = perm[factors[i]];
-        if ((possible_factor != -1) && (i < mult_result.num_mult)) {
+    for (i32 i = 0; i < mult_result.num_mult; ++i) {
+        i32 possible_factor = factors[perm[i]];
+        if (possible_factor != -1) {
             result.push_back(possible_factor);
         }
     }

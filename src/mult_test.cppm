@@ -43,6 +43,13 @@ MultResult check_one_mult(
     int num_mult = factors.size();
     const auto& perms = global_perms[num_mult];
 
+    if (num_mult >= global_perms.size()) {
+        throw std::runtime_error("check_one_mult: number of multipliers exceeds precomputed permutations");
+    }
+    if (factors.size() != factors_are_k.size()) {
+        throw std::runtime_error("check_one_mult: factors and factors_are_k size mismatch");
+    }
+
     for (const auto& p : perms) {
     for (i32 gi = 0; gi < (1 << num_mult); ++gi) {
         // We don't need to try inversion of k-factors
