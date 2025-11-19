@@ -5,11 +5,6 @@ import threadpool;
 import test;
 import containers;
 
-constexpr int num_threads = 32;
-constexpr int generators_per_thread = 32;
-
-ThreadPool pool(num_threads);
-
 void run_gamma_test() {
         std::println("Hello, Hasty Radical!");
 
@@ -42,7 +37,7 @@ void run_gamma_test() {
         std::println("Found {} equivalence classes after initial check for Gamma({})", classes.size(), n);
         std::println("Successful generators after initial check: {}", tgn.get_successful_generators().size());
 
-        tgn.run_non_mult_class_tests();
+        //tgn.run_non_mult_class_tests();
 
         std::println("Successful generators after non mult check: {}", tgn.get_successful_generators().size());
 

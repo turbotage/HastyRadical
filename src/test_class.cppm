@@ -21,8 +21,8 @@ private:
 
 	UnionFind _union_find;
 
-	ThreadPool _pool;
-	ThreadPool _local_pool;
+	ThreadPool _small_pool;
+	ThreadPool _large_pool;
 
 	GeneratorsState _generators_state;
 
@@ -34,11 +34,11 @@ public:
 		_successful(), 
 		_remaining(std::ranges::to<std::unordered_set<i32>>(std::ranges::iota_view{0uz, _generators.size()})), 
 		_success_states(_generators.size()),
-		_pool(4),
-		_local_pool(8),
+		_small_pool(1),
+		_large_pool(1),
 		_union_find(_generators.size()),
 		_generators_state(
-			_generators, _successful, _remaining, _n, _local_pool
+			_generators, _successful, _remaining, _n, _large_pool
 		)
 	{
 		_successful.reserve(_remaining.size());
@@ -78,7 +78,7 @@ public:
         // Test all remaining generators
 		std::deque<std::future<std::vector<i32>>> futures;
         for (i32 remidx = 0; remidx < _remaining.size(); remidx += gens_per_invoc) {
-            futures.emplace_back(_pool.Enqueue(
+            futures.emplace_back(_large_pool.Enqueue(
                 first_caller, remidx
             ));
         }
@@ -350,7 +350,7 @@ public:
 				continue;
 			}
 			local_futures.push_back({
-				_local_pool.Enqueue(
+				_large_pool.Enqueue(
 					[this](const std::vector<i32>& class_members) 
 						-> SuccessState
 					{
@@ -415,7 +415,7 @@ public:
 				continue;
 			}
 			local_futures.push_back({
-				_local_pool.Enqueue(
+				_small_pool.Enqueue(
 					[this](const std::vector<i32>& class_members) 
 						-> MultAndAkSuccessSolution
 					{

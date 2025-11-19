@@ -18,7 +18,7 @@ constexpr std::vector<std::vector<i32>> all_permutations(i32 n) {
 	return result;
 }
 
-static std::vector<std::vector<std::vector<i32>>> global_perms = {
+export std::vector<std::vector<std::vector<i32>>> global_perms = {
     all_permutations(0),
 	all_permutations(1), 
     all_permutations(2), 
