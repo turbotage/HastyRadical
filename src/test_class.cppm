@@ -10,31 +10,6 @@ import containers;
 import tests;
 
 
-struct CheckResult {
-	i64 products_tested = 1;
-
-	i8 inversion_permutation_at_success;
-	i8 ypos_at_success;
-	std::vector<i32> gens_giving_success;
-	std::vector<i32> gens_permutation;
-};
-
-enum class SuccessType : u8 {
-	NONE = 0,
-	SUCCESS_BY_EQUIVALENCE = 1,
-	SUCCESS_BY_INITIAL_TEST = 2,
-	SUCCESS_BY_AK_TEST = 3,
-	SUCCESS_BY_SEQUENCE_TEST = 4,
-	SUCCESS_BY_MULT_TEST = 5
-};
-
-struct SuccessState {
-	SuccessType success_type;
-	std::optional<InitialSuccessSolution> initial_success_solution;
-	std::optional<AkSuccessSolution> ak_success_solution;
-	std::optional<SeqSuccessSolution> seq_success_solution;
-	std::optional<MultSuccessSolution> mult_success_solution;
-};
 
 export class TestGammaN {
 private:
@@ -42,9 +17,9 @@ private:
 	std::vector<std::array<i64,4>> _generators;
 	std::unordered_set<i32> _successful;
 	std::unordered_set<i32> _remaining;
-	std::vector<CheckResult> _check_results;
+	std::vector<class_tests::SuccessState> _success_states;
 
-	UnionFind _equiv_classes;
+	UnionFind _union_find;
 
 	ThreadPool _pool;
 	ThreadPool _local_pool;
@@ -122,6 +97,12 @@ public:
 				local_successful.begin(),
 				local_successful.end()
 			);
+			// Change success states to initial success
+			for (i32 succ_idx : local_successful) {
+				_success_states[succ_idx] = SuccessState{
+					SuccessType::INITIAL_SUCCESS, succ_idx, {}, {}, {}, {}
+				};
+			}
 		}
 	}
 
@@ -207,41 +188,167 @@ public:
 		}
 	}
 
-	auto non_mult_class_tests(const std::vector<i32>& class_members)
-		-> SuccessState
+	void update_success_states_from_class_test(
+		const std::vector<i32>& class_members,
+		const class_tests::SuccessState& success_state
+	) 
 	{
-		InitialSuccessSolution result = class_tests::is_initial_successful(
-			class_members, 
-			_generators_state
-		);
-		if (result.success) {
-			return {SuccessType::SUCCESS_BY_INITIAL_TEST, result, {}, {}, {}};
+		switch (success_state.success_type) {
+		case SuccessType::NONE:
+		{
+			// No success, nothing to do
+			return;
+		}
+		case SuccessType::SUCCESS_BY_EQUIVALENCE:
+		{
+			throw std::runtime_error(
+				"A class test should not result in an equivalence success state"
+			);
+		}
+		break;
+		case SuccessType::SUCCESS_BY_INITIAL_TEST:
+		{
+			if (!_success_state.initial_success_solution.has_value()) {
+				throw std::runtime_error(
+					"Success state was SUCCESS_BY_INITIAL_TEST but no initial success solution was provided"
+				);
+			}
+			i32 initial_successful_genidx = 
+				success_state.initial_success_solution->initial_successful_genidx;
+
+			for (i32 member_idx : class_members) {
+				// For the initiall successtype, the successstate
+				// is already set for the successful generator
+				// Now we just set the others to equivalence
+				// with the initial successful one as parent
+				if (member_idx != initial_successful_genidx) {
+					_success_states[member_idx] = SuccessState{
+						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						initial_successful_genidx,
+						{}, {}, {}, {}
+					};
+				}
+			}
+		}
+		break;
+		case SuccessType::SUCCESS_BY_AK_TEST:
+		{
+			if (!_success_state.ak_success_solution.has_value()) {
+				throw std::runtime_error(
+					"Success state was SUCCESS_BY_AK_TEST but no AK success solution was provided"
+				);
+			}
+			i32 ak_successful_genidx = 
+				success_state.ak_success_solution->ak_successful_genidx;
+
+			for (i32 member_idx : class_members) {
+				// For the index giving the solution we set the
+				// success state to the returned state
+				// For the others we set it to equivalence
+				// with the AK successful one as parent
+				if (member_idx == ak_successful_genidx) {
+					_success_states[member_idx] = success_state;
+				} else {
+					_success_states[member_idx] = SuccessState{
+						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						ak_successful_genidx,
+						{}, {}, {}, {}
+					};
+				}
+			}
+		}
+		break;
+		case SuccessType::SUCCESS_BY_SEQUENCE_TEST:
+		{
+			if (!_success_state.seq_success_solution.has_value()) {
+				throw std::runtime_error(
+					"Success state was SUCCESS_BY_SEQUENCE_TEST but no sequence success solution was provided"
+				);
+			}
+			i32 seq_successful_genidx = 
+				success_state.seq_success_solution->seq_successful_genidx;
+
+			for (i32 member_idx : class_members) {
+				// For the index giving the solution we set the
+				// success state to the returned state
+				// For the others we set it to equivalence
+				// with the sequence successful one as parent
+				if (member_idx == seq_successful_genidx) {
+					_success_states[member_idx] = success_state;
+				} else {
+					_success_states[member_idx] = SuccessState{
+						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						seq_successful_genidx,
+						{}, {}, {}, {}
+					};
+				}
+			}
+		}
+		break;
+		case SuccessType::SUCCESS_BY_MULT_TEST:
+		{
+			if (!_success_state.mult_success_solution.has_value()) {
+				throw std::runtime_error(
+					"Success state was SUCCESS_BY_MULT_TEST but no multiplication success solution was provided"
+				);
+			}
+
+			i32 mult_successful_genidx = 
+				success_state.mult_success_solution->mult_successful_genidx;
+
+			for (i32 member_idx : class_members) {
+				// For the index giving the solution we set the
+				// success state to the returned state
+				// For the others we set it to equivalence
+				// with the multiplication successful one as parent
+				if (member_idx == mult_successful_genidx) {
+					_success_states[member_idx] = success_state;
+				} else {
+					_success_states[member_idx] = SuccessState{
+						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						mult_successful_genidx,
+						{}, {}, {}, {}
+					};
+				}
+			}
+
+			// For the multiplication success, we also need to unite the classes
+			// of all the multipliers used
+			auto mult_solution = *success_state.mult_success_solution;
+			auto gens_in_mult = gens_in_successful_mult(mult_solution);
+			for (i32 gen_idx : gens_in_mult) {
+				if (gen_idx == mult_successful_genidx) {
+					continue;
+				}
+				_union_find.unite(
+					mult_successful_genidx,
+					gen_idx
+				);
+			}
+		}
+		break;
 		}
 
-		AkSuccessSolution ak_result = class_tests::is_Ak_successful(
-			class_members, 
-			_generators_state
-		);
-		if (ak_result.success) {
-			return {SuccessType::SUCCESS_BY_AK_TEST, {}, ak_result, {}, {}};
-		}
+		// If we reached this point, we should set this class as successful
+		// the success_parent_genidx should always point to a generator
+		// in the now successful class (it should be the generator that
+		// provided the success)
+		_union_find.set_val(success_state.success_parent_genidx, true);
 
-		SeqSuccessSolution seq_result = class_tests::is_sequence_successful(
-			class_members, 
-			_generators_state
-		);
-		if (seq_result.success) {
-			return {SuccessType::SUCCESS_BY_SEQUENCE_TEST, {}, {}, seq_result, {}};
-		}
-
-		return {SuccessType::NONE, {}, {}, {}, {}};
 	}
 
 	void run_non_mult_class_tests()
 	{
 		auto class_map = get_equiv_classes_with_bool();
+		std::vector<i32> new_successful;
+		new_successful.reserve(_remaining.size());
 
-		std::deque<std::future<SuccessState>> local_futures;
+		std::deque<
+			std::pair<
+				std::future<SuccessState>, 
+				std::vector<i32>
+			>
+		> local_futures;
 		for (const auto& [rep, class_info] : class_map) {
 			if (class_info.second) {
 				continue;
@@ -249,18 +356,109 @@ public:
 			local_futures.push_back(
 				_local_pool.Enqueue(
 					[this](std::vector<i32> class_members) {
-						return non_mult_class_tests(class_members);
+						return non_mult_class_tests(
+							class_members,
+							_generators_state
+						);
 					}, 
 					class_info.first
-				)
+				),
+				class_info.first
 			);
 		}
+		while (local_futures.size() > 0) {
+			auto pair = local_futures.front();
+			auto result = pair.first.get();
+			auto class_members = pair.second;
+			local_futures.pop_front();
+			// Process result as needed
+			update_success_states_from_class_test(
+				class_members,
+				result
+			);
+			if (result.success_type != SuccessType::NONE) {
+				for (i32 member_idx : class_members) {
+					new_successful.push_back(member_idx);
+				}
+				std::println(
+					"Class successful by non-mult test. Success type: {}. Class size: {}",
+					static_cast<int>(result.success_type),
+					class_members.size()
+				);
+			}
+		}
+
+		_successful.insert(
+			_successful.end(),
+			new_successful.begin(),
+			new_successful.end()
+		);
+		_remaining.erase(
+			new_successful.begin(),
+			new_successful.end()
+		);
 
 	}
 
-	const std::vector<CheckResult>& get_check_results() const 
+	void run_mult_class_tests()
 	{
-		return _check_results;
+		auto class_map = get_equiv_classes_with_bool();
+		std::vector<i32> new_successful;
+		new_successful.reserve(_remaining.size());
+
+		std::deque<
+			std::pair<
+				std::future<SuccessState>, 
+				std::vector<i32>
+			>
+		> local_futures;
+		for (const auto& [rep, class_info] : class_map) {
+			if (class_info.second) {
+				continue;
+			}
+			local_futures.push_back(
+				_local_pool.Enqueue(
+					[this](std::vector<i32> class_members) {
+						return mult_class_tests(
+							class_members,
+							_generators_state
+						);
+					}, 
+					class_info.first
+				),
+				class_info.first
+			);
+		}
+		while (local_futures.size() > 0) {
+			auto pair = local_futures.front();
+			auto result = pair.first.get();
+			auto class_members = pair.second;
+			local_futures.pop_front();
+			// Process result as needed
+			update_success_states_from_class_test(
+				class_members,
+				result
+			);
+			if (result.success_type != SuccessType::NONE) {
+				for (i32 member_idx : class_members) {
+					new_successful.push_back(member_idx);
+				}
+				std::println(
+					"Class successful by mult test. Class size: {}",
+					class_members.size()
+				);
+			}
+		}
+
+		_successful.insert(
+			_successful.end(),
+			new_successful.begin(),
+			new_successful.end()
+		);
+		_remaining.erase(
+			new_successful.begin(),
+			new_successful.end()
+		);
 	}
 
 	const void write_to_file() const {

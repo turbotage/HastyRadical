@@ -152,7 +152,7 @@ export enum class SuccessTypeAk : u8 {
 export struct CheckResultAk {
     bool success;
     u8 info;
-    u32 k_value;
+    i32 k_value;
 };
 
 export template<integral I>

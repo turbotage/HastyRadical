@@ -32,31 +32,14 @@ void run_gamma_test() {
         std::println("Found {} equivalence classes after initial check for Gamma({})", classes.size(), n);
         std::println("Successful generators after initial check: {}", tgn.get_successful_generators().size());
 
-        //tgn.run_multiplication_checks();
+        tgn.run_non_mult_class_tests();
 
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        auto time_taken = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
-        std::println("Time taken for Gamma({}): {} seconds", n, time_taken);
+        std::println("Successful generators after non mult check: {}", tgn.get_successful_generators().size());
 
-        for (const auto& [rep, pair] : classes) {
-            const auto& [members, was_successful] = pair;
-            std::println("Equivalence class: representative {}, size {}, was successful: {}", rep, members.size(), was_successful);
-            if (!was_successful) {
-                std::print("    Members:");
-                for (int i = 0; i < members.size(); ++i) {
-                    if (i % 20 == 0){
-                        std::println();
-                        std::print("        ");
-                    }
-                    std::print("  {}", members[i]);
-                }
-                std::println();
-            }
-        }
+        tgn.run_mult_class_tests();
 
-        for (i32 idx : tgn.get_successful_generators()) {
-            //std::println("Generator {} is successful for Gamma({})", idx, n);
-        }
+        std::println("Successful generators after mult check: {}", tgn.get_successful_generators().size());
+
     };
 
     run_gamma(100);

@@ -7,7 +7,7 @@ import radlib;
 import threadpool;
 import containers;
 
-import mult_state;
+import mult_test;
 
 export struct GeneratorsState {
     const std::vector<std::array<i64,4>>& generators;
@@ -48,6 +48,7 @@ export AkSuccessSolution is_Ak_successful(
     const std::vector<i32>& class_members,
     const GeneratorsState& gen_state
 ) {
+    i32 n = gen_state.n;
     std::vector<i32> test_k_vals = {1, n, n*n+1, 2*n*n};
     for (i32 kidx = 0; kidx < test_k_vals.size()-1; ++kidx) {
         for (i32 midx = 0; midx < class_members.size(); ++midx) {
@@ -75,32 +76,33 @@ export SeqSuccessSolution is_sequence_successful(
         auto mat = cast_matrix<i128>(gen_state.generators[member]);
         auto res = check_element_sequence(mat, gen_state.n);
         if (res.success) {
-            return {true, member, res.k_value};
+            return {true, member, res.k};
         }
     }
     return {false, -1, -1};
 }
 
-export struct MultAndAkSuccessSolution {
+export struct MultAndAkSuccessSolution 
+{
     i32 mult_successful_genidx;
     i32 multiplier1_genidx;
     i32 multiplier2_genidx;
+    i32 k_value;
     MultResult mult_result;
 };
 
 export MultAndAkSuccessSolution is_mult_successful(
     const std::vector<i32>& class_members,
     const GeneratorsState& gen_state
-) {
-
-    // The member checker takes two successful generators and 
-    //
+) 
+{
     auto member_checker = [&class_members, &gen_state](i32 mat1_idx, i32 mat2_idx)
         -> MultAndAkSuccessSolution
     {
         MultAndAkSuccessSolution result;
          
         std::vector<std::array<i128,4>> factors(4);
+        std::vector<bool> factors_are_k = {false, false, false, true};
 
         factors[1] = cast_matrix<i128>(gen_state.generators[mat1_idx]);
         factors[2] = cast_matrix<i128>(gen_state.generators[mat2_idx]);
@@ -115,7 +117,11 @@ export MultAndAkSuccessSolution is_mult_successful(
                 factors[3][2] = 1;
                 factors[3][3] = -k;
 
-                result.mult_result = check_one_mult<i128>(factors);
+                result.mult_result = check_one_mult<i128>(
+                                        factors, 
+                                        factors_are_k, 
+                                        gen_state.n
+                                    );
                 if (result.mult_result.success) {
                     result.mult_successful_genidx = midx;
                     result.multiplier1_genidx = mat1_idx;
@@ -131,7 +137,7 @@ export MultAndAkSuccessSolution is_mult_successful(
     MultAndAkSuccessSolution result;
 
     i32 succ_size = gen_state.successful.size();
-    std::deque<std::future<bool>> futures;
+    std::deque<std::future<MultAndAkSuccessSolution>> futures;
     // iterate over all permutations of 2 successful generators
     for (i32 succ_idx1 = 0; succ_idx1 < succ_size; ++succ_idx1) {
     for (i32 succ_idx2 = succ_idx1; succ_idx2 < succ_size; ++succ_idx2) {
@@ -161,7 +167,89 @@ export MultAndAkSuccessSolution is_mult_successful(
     return result;
 }
 
+std::vector<i32> gens_in_successful_mult(
+    const MultAndAkSuccessSolution& mult_solution
+)
+{
+    auto& mult_result = mult_solution.mult_result;
+    std::array<i32,4> factors = {
+        mult_solution.mult_successful_genidx,
+        mult_solution.multiplier1_genidx,
+        mult_solution.multiplier2_genidx,
+        -1
+    };
+    std::vector<i32> result;
+    for (i32 i = 0; i < 4; ++i) {
+        i32 possible_factor = mult_result.perm[factors[i]];
+        if ((possible_factor != -1) && (i < mult_result.num_mult)) {
+            result.push_back(possible_factor);
+        }
+    }
+    return result;
+}
 
+
+export enum class SuccessType : u8 {
+	NONE = 0,
+	SUCCESS_BY_INITIAL_TEST = 1,
+	SUCCESS_BY_EQUIVALENCE = 2,
+	SUCCESS_BY_AK_TEST = 3,
+	SUCCESS_BY_SEQUENCE_TEST = 4,
+	SUCCESS_BY_MULT_TEST = 5
+};
+
+export struct SuccessState {
+	SuccessType success_type;
+    i32 success_parent_genidx;
+	std::optional<InitialSuccessSolution> initial_success_solution;
+	std::optional<AkSuccessSolution> ak_success_solution;
+	std::optional<SeqSuccessSolution> seq_success_solution;
+	std::optional<MultAndAkSuccessSolution> mult_success_solution;
+};
+
+export SuccessState non_mult_class_tests(
+    const std::vector<i32>& class_members,
+    const GeneratorsState& gen_state
+)
+{
+    InitialSuccessSolution result = class_tests::is_initial_successful(
+        class_members, 
+        gen_state
+    );
+    if (result.success) {
+        return {
+            SuccessType::SUCCESS_BY_INITIAL_TEST, 
+            result.initial_successful_genidx,
+            result, {}, {}, {}
+        };
+    }
+
+    AkSuccessSolution ak_result = class_tests::is_Ak_successful(
+        class_members, 
+        gen_state
+    );
+    if (ak_result.success) {
+        return {
+            SuccessType::SUCCESS_BY_AK_TEST,
+            ak_result.ak_successful_genidx,
+            {}, ak_result, {}, {}
+        };
+    }
+
+    SeqSuccessSolution seq_result = class_tests::is_sequence_successful(
+        class_members, 
+        gen_state
+    );
+    if (seq_result.success) {
+        return {
+            SuccessType::SUCCESS_BY_SEQUENCE_TEST,
+            seq_result.seq_successful_genidx,
+            {}, {}, seq_result, {}
+        };
+    }
+
+    return {SuccessType::NONE, -1, {}, {}, {}, {}};
+}
 
 
 
