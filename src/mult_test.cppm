@@ -18,16 +18,19 @@ constexpr std::vector<std::vector<i32>> all_permutations(i32 n) {
 	return result;
 }
 
-std::vector<std::vector<std::vector<i32>>> global_perms = {
-	all_permutations(1), all_permutations(2), 
-	all_permutations(3), all_permutations(4)
+static std::vector<std::vector<std::vector<i32>>> global_perms = {
+    all_permutations(0),
+	all_permutations(1), 
+    all_permutations(2), 
+	all_permutations(3), 
+    all_permutations(4)
 };
 
 export struct MultResult {
-    bool success;
-    std::vector<i32> perm;
-    i32 inversion_bitmap;
-    i32 num_mult;
+    bool success = false;
+    std::reference_wrapper<const std::vector<i32>> perm = std::cref(global_perms[0][0]);
+    i32 inversion_bitmap = -1;
+    i32 num_mult = -1;
 };
 
 export template<integral I>
@@ -35,12 +38,12 @@ MultResult check_one_mult(
     const std::vector<std::array<I,4>>& factors,
     const std::vector<bool>& factors_are_k,
     i32 n
-) 
+)
 {
     int num_mult = factors.size();
-    auto perms = global_perms[num_mult];
+    const auto& perms = global_perms[num_mult];
 
-    for (auto& p : perms) {
+    for (const auto& p : perms) {
     for (i32 gi = 0; gi < (1 << num_mult); ++gi) {
         // We don't need to try inversion of k-factors
         // So if there are any k-factors that should be inverted
@@ -70,17 +73,17 @@ MultResult check_one_mult(
 
             if (pos < num_mult - 1 && ((1 << (pos+1)) & gi) && pos > 0) {
                 // Intermediate check
-                if (check_element(totest, n).success) {
-                    return { true, p, gi, num_mult };
+                if (check_element(totest, n) != CheckElementSuccessType::NONE) {
+                    return { true, std::cref(p), gi, pos };
                 }
             }
         }
 
         // The product is produced, check it
-        if (check_element(totest, n).success) {
-            return { true, p, gi, num_mult };
+        if (check_element(totest, n) != CheckElementSuccessType::NONE) {
+            return { true, std::cref(p), gi, num_mult };
         }
     }}
 
-    return { false, {}, 0, 0 };
+    return { false, std::cref(global_perms[0][0]), 0, 0 };
 }

@@ -18,6 +18,7 @@ export using i64 = std::int64_t;
 export using i128 = __int128_t;      // requires GCC/Clang on
 
 
+
 export template<typename T>
 concept integral = std::is_same_v<T, i8> || std::is_same_v<T, i16> || std::is_same_v<T, i32> || std::is_same_v<T, i64> || std::is_same_v<T, i128>;
 
@@ -114,7 +115,7 @@ inline I abs(I x) {
     return x < 0 ? -x : x;
 }
 
-export enum class SuccessType : u8 {
+export enum class CheckElementSuccessType : u8 {
     NONE = 0,
     RAD_31 = 1,
     RAD_21 = 2,
@@ -122,41 +123,36 @@ export enum class SuccessType : u8 {
     X3_EQ_N = 4
 };
 
-export struct CheckResultRegular {
-    bool success;
-    u8 info;
-};
-
 export template<integral I>
-CheckResultRegular check_element(const std::array<I,4>& mat, i32 n) {
+CheckElementSuccessType check_element(const std::array<I,4>& mat, i32 n) {
     // not correct
     if (divides_radical(abs(mat[idx(1,0)]), abs(mat[idx(0,0)])))
-        return {true, (u8)SuccessType::RAD_31};
+        return CheckElementSuccessType::RAD_31;
     if (divides_radical(abs(mat[idx(0,1)]), abs(mat[idx(0,0)])))
-        return {true, (u8)SuccessType::RAD_21};
+        return CheckElementSuccessType::RAD_21;
     if (abs(mat[idx(0,1)]) == n)
-        return {true, (u8)SuccessType::X2_EQ_N};
+        return CheckElementSuccessType::X2_EQ_N;
     if (abs(mat[idx(1,0)]) == n)
-        return {true, (u8)SuccessType::X3_EQ_N};
-    return {false, (u8)SuccessType::NONE};
+        return CheckElementSuccessType::X3_EQ_N;
+    return CheckElementSuccessType::NONE;
 }
 
-export enum class SuccessTypeAk : u8 {
-    NONE = 0,
-    LEFT_MULTIPLY = 1,
-    RIGHT_MULTIPLY = 2,
-    LEFT_MULTIPLY_INVERT = 3,
-    RIGHT_MULTIPLY_INVERT = 4
-};
+export struct SuccessStateAk {
 
-export struct CheckResultAk {
-    bool success;
-    u8 info;
+    enum class SuccessType : u8 {
+        NONE = 0,
+        LEFT_MULTIPLY = 1,
+        RIGHT_MULTIPLY = 2,
+        LEFT_MULTIPLY_INVERT = 3,
+        RIGHT_MULTIPLY_INVERT = 4
+    };
+
+    SuccessType info;
     i32 k_value;
 };
 
 export template<integral I>
-CheckResultAk check_element_Ak(const std::array<I,4>& mat, i32 n, i32 lower_k, i32 upper_k) {
+SuccessStateAk check_element_Ak(const std::array<I,4>& mat, i32 n, i32 lower_k, i32 upper_k) {
 
     std::array<I,4> test_map;
     for (u16 k = lower_k; k < upper_k; ++k) {
@@ -168,29 +164,39 @@ CheckResultAk check_element_Ak(const std::array<I,4>& mat, i32 n, i32 lower_k, i
         // Left multiply
         std::array<I,4> result;
         result = group_multiplication(mat, test_map, n);
-        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::LEFT_MULTIPLY, k};
+        if (check_element(result, n) != CheckElementSuccessType::NONE) 
+            return {SuccessStateAk::SuccessType::LEFT_MULTIPLY, k};
         // Right multiply
         result = group_multiplication(test_map, mat, n);
-        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::RIGHT_MULTIPLY, k};
+        if (check_element(result, n) != CheckElementSuccessType::NONE) 
+            return {SuccessStateAk::SuccessType::RIGHT_MULTIPLY, k};
         // Invert and left multiply and right multiply
         group_inversion_(test_map, n);
         result = group_multiplication(mat, test_map, n);
-        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::LEFT_MULTIPLY_INVERT, k};
+        if (check_element(result, n) != CheckElementSuccessType::NONE) 
+            return {SuccessStateAk::SuccessType::LEFT_MULTIPLY_INVERT, k};
         result = group_multiplication(test_map, mat, n);
-        if (check_element(result, n).success) return {true, (u8)SuccessTypeAk::RIGHT_MULTIPLY_INVERT, k};
+        if (check_element(result, n) != CheckElementSuccessType::NONE) 
+            return {SuccessStateAk::SuccessType::RIGHT_MULTIPLY_INVERT, k};
     
     }
 
-    return {false, (u8)SuccessTypeAk::NONE, 0};
+    return {SuccessStateAk::SuccessType::NONE, 0};
 }
 
-export struct CheckResultSeq {
-    bool success;
+export struct SuccessStateSeq {
+
+    enum class SuccessType : u8 {
+        NONE = 0,
+        SUCCESS = 1
+    };
+
+    SuccessType info;
     u8 k;
 };
 
 export template<integral I>
-CheckResultSeq check_element_sequence(const std::array<I,4>& mat, i32 n)
+SuccessStateSeq check_element_sequence(const std::array<I,4>& mat, i32 n)
 {
     I x1 = mat[0];
     I x3 = mat[2];
@@ -201,10 +207,10 @@ CheckResultSeq check_element_sequence(const std::array<I,4>& mat, i32 n)
         x1 = temp;
 
         if (divides_radical(abs(x3), abs(x1))) {
-            return {true, static_cast<u8>(k)};
+            return {SuccessStateSeq::SuccessType::SUCCESS, static_cast<u8>(k)};
         }
     }
-    return {false, 0};
+    return {SuccessStateSeq::SuccessType::NONE, 0};
 }
 
 
@@ -241,7 +247,38 @@ export std::string get_project_file_path(const std::string& relative_path) {
 }
 
 export template<integral I>
-std::vector<std::array<I,4>> load_group_generators(I n) {
+std::vector<std::array<I,4>> load_group_generators_tilde(I n) {
+    std::ifstream file(
+        get_project_file_path("generators_gamma_tilde/gamma_" + std::to_string(n) + "_generators.txt")
+    );
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open generators file");
+    }
+
+    std::vector<std::array<I,4>> generators;
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.empty()) continue;
+        std::array<I,4> mat;
+        std::size_t pos = 0, last = 0;
+        for (int i = 0; i < 4; ++i) {
+            pos = line.find(',', last);
+            std::string val_str = (pos == std::string::npos) ? line.substr(last) : line.substr(last, pos - last);
+            mat[i] = static_cast<I>(std::stoll(val_str));
+            if (mat[i] > n*n*n*n) {
+                throw std::runtime_error("Generator entry larger than n**4: " + val_str);
+            }
+            last = (pos == std::string::npos) ? std::string::npos : pos + 1;
+        }
+        generators.push_back(mat);
+    }
+    file.close();
+    return generators;
+}
+
+export template<integral I>
+std::vector<std::array<I,4>> load_group_generators_old(I n) 
+{
     std::ifstream file(
         get_project_file_path("generators/gamma_" + std::to_string(n) + "_generators.txt")
     );

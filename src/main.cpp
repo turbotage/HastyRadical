@@ -16,16 +16,26 @@ void run_gamma_test() {
     int maxn = 50;
 
     auto run_gamma = [](int n) {
-        auto gens = load_group_generators<i64>(n);
+        auto gens = load_group_generators_tilde<i64>(n);
         std::println("Loaded {} generators for Gamma({})", gens.size(), n);
 
-        auto tgn = TestGammaN(std::move(gens), n, pool, generators_per_thread, num_threads);
+        auto tgn = TestGammaN(std::move(gens), n);
 
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
         tgn.run_initial_check();
 
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - begin;
+        std::println("Initial check took {} seconds", elapsed_seconds.count());
+
+        begin = std::chrono::steady_clock::now();
+
         tgn.build_initial_equiv_classes();
+
+        end = std::chrono::steady_clock::now();
+        elapsed_seconds = end - begin;
+        std::println("Building initial equivalence classes took {} seconds", elapsed_seconds.count());
 
         auto classes = tgn.get_equiv_classes_with_bool();
         

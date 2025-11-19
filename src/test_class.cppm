@@ -17,7 +17,7 @@ private:
 	std::vector<std::array<i64,4>> _generators;
 	std::unordered_set<i32> _successful;
 	std::unordered_set<i32> _remaining;
-	std::vector<class_tests::SuccessState> _success_states;
+	std::vector<SuccessState> _success_states;
 
 	UnionFind _union_find;
 
@@ -32,46 +32,43 @@ public:
 		: _n(n), 
 		_generators(std::move(gens)), 
 		_successful(), 
-		_remaining(std::ranges::to<std::vector<i32>>(std::ranges::iota_view{0uz, _generators.size()})), 
-		_check_results(_generators.size()),
-		_generators_per_thread(generators_per_thread),
-		_number_of_threads(number_of_threads),
+		_remaining(std::ranges::to<std::unordered_set<i32>>(std::ranges::iota_view{0uz, _generators.size()})), 
+		_success_states(_generators.size()),
 		_pool(4),
 		_local_pool(8),
-		_equiv_classes(_generators.size()),
+		_union_find(_generators.size()),
 		_generators_state(
-			{_generators, _successful, _remaining, _n, _local_pool}
+			_generators, _successful, _remaining, _n, _local_pool
 		)
 	{
 		_successful.reserve(_remaining.size());
-		futures.reserve((_remaining.size() + _generators_per_thread - 1) / _generators_per_thread);
-		_temp1.reserve(_remaining.size());
-		_temp2.reserve(_remaining.size());
 	}
 
 	GeneratorsState& get_generators_state() {
-		return _equiv_classes;
+		return _generators_state;
 	}
 
 	std::unordered_map<i32, std::vector<i32>> get_equiv_classes() {
-		return _equiv_classes.get_classes();
+		return _union_find.get_classes();
 	}
 
 	std::unordered_map<i32, std::pair<std::vector<i32>, bool>> get_equiv_classes_with_bool() {
-		return _equiv_classes.get_classes_with_bool();
+		return _union_find.get_classes_with_bool();
 	}
 
-	const std::vector<i32>& get_successful_generators() const {
+	const std::unordered_set<i32>& get_successful_generators() const {
 		return _successful;
 	}
 
 	void run_initial_check()
     {
-        auto first_caller = [this](i32 start_idx) {
+		i32 gens_per_invoc = 50;
+
+        auto first_caller = [this, gens_per_invoc](i32 start_idx) {
             std::vector<i32> out;
-			i32 maxidx = std::min(start_idx + _generators_per_thread, (i32)_generators.size());
+			i32 maxidx = std::min(start_idx + gens_per_invoc, (i32)_generators.size());
 			for (i32 idx = start_idx; idx < maxidx; ++idx) {
-                if (check_element(cast_matrix<i128>(_generators[idx]), _n).success) {
+                if (check_element(cast_matrix<i128>(_generators[idx]), _n) != CheckElementSuccessType::NONE) {
                     out.push_back(idx);
                 }
             }
@@ -80,7 +77,7 @@ public:
 
         // Test all remaining generators
 		std::deque<std::future<std::vector<i32>>> futures;
-        for (i32 remidx = 0; remidx < _remaining.size(); remidx += 50) {
+        for (i32 remidx = 0; remidx < _remaining.size(); remidx += gens_per_invoc) {
             futures.emplace_back(_pool.Enqueue(
                 first_caller, remidx
             ));
@@ -89,18 +86,17 @@ public:
 			auto local_successful = futures.front().get();
 			futures.pop_front();
 			_successful.insert(
-				_successful.end(),
 				local_successful.begin(),
 				local_successful.end()
 			);
-			_remaining.erase(
-				local_successful.begin(),
-				local_successful.end()
-			);
+			for (i32 succ_idx : local_successful) {
+				_remaining.erase(succ_idx);
+			}
 			// Change success states to initial success
 			for (i32 succ_idx : local_successful) {
 				_success_states[succ_idx] = SuccessState{
-					SuccessType::INITIAL_SUCCESS, succ_idx, {}, {}, {}, {}
+					SuccessState::SuccessType::SUCCESS_BY_INITIAL_TEST, succ_idx, 
+					{}, {}, {}, {}
 				};
 			}
 		}
@@ -129,9 +125,9 @@ public:
 					auto gen2 = _generators[indices[j]];
 
 					if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
-						_equiv_classes.unite(indices[i], indices[j]);
+						_union_find.unite(indices[i], indices[j]);
 					} else if (divides_radical(abs(_n*x1 + 1), abs(gen1[2] - gen2[2]))) {
-						_equiv_classes.unite(indices[i], indices[j]);
+						_union_find.unite(indices[i], indices[j]);
 						std::println("Simon was wrong");
 					}
 				}
@@ -155,7 +151,7 @@ public:
 					auto gen2 = _generators[indices[j]];
 
 					if (divides_radical(abs(x2_or_x3), abs(gen1[0] - gen2[0]))) {
-						_equiv_classes.unite(indices[i], indices[j]);
+						_union_find.unite(indices[i], indices[j]);
 					}
 
 				}
@@ -178,9 +174,9 @@ public:
 					auto gen2 = _generators[indices[j]];
 
 					if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
-						_equiv_classes.unite(indices[i], indices[j]);
+						_union_find.unite(indices[i], indices[j]);
 					} else if (divides_radical(abs(_n*x4 + 1), abs(gen1[2] - gen2[2]))) {
-						_equiv_classes.unite(indices[i], indices[j]);
+						_union_find.unite(indices[i], indices[j]);
 						std::println("Simon was wrong");
 					}
 				}
@@ -190,25 +186,25 @@ public:
 
 	void update_success_states_from_class_test(
 		const std::vector<i32>& class_members,
-		const class_tests::SuccessState& success_state
+		const SuccessState& success_state
 	) 
 	{
 		switch (success_state.success_type) {
-		case SuccessType::NONE:
+		case SuccessState::SuccessType::NONE:
 		{
 			// No success, nothing to do
 			return;
 		}
-		case SuccessType::SUCCESS_BY_EQUIVALENCE:
+		case SuccessState::SuccessType::SUCCESS_BY_EQUIVALENCE:
 		{
 			throw std::runtime_error(
 				"A class test should not result in an equivalence success state"
 			);
 		}
 		break;
-		case SuccessType::SUCCESS_BY_INITIAL_TEST:
+		case SuccessState::SuccessType::SUCCESS_BY_INITIAL_TEST:
 		{
-			if (!_success_state.initial_success_solution.has_value()) {
+			if (!success_state.initial_success_solution.has_value()) {
 				throw std::runtime_error(
 					"Success state was SUCCESS_BY_INITIAL_TEST but no initial success solution was provided"
 				);
@@ -223,7 +219,7 @@ public:
 				// with the initial successful one as parent
 				if (member_idx != initial_successful_genidx) {
 					_success_states[member_idx] = SuccessState{
-						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						SuccessState::SuccessType::SUCCESS_BY_EQUIVALENCE,
 						initial_successful_genidx,
 						{}, {}, {}, {}
 					};
@@ -231,9 +227,9 @@ public:
 			}
 		}
 		break;
-		case SuccessType::SUCCESS_BY_AK_TEST:
+		case SuccessState::SuccessType::SUCCESS_BY_AK_TEST:
 		{
-			if (!_success_state.ak_success_solution.has_value()) {
+			if (!success_state.ak_success_solution.has_value()) {
 				throw std::runtime_error(
 					"Success state was SUCCESS_BY_AK_TEST but no AK success solution was provided"
 				);
@@ -250,7 +246,7 @@ public:
 					_success_states[member_idx] = success_state;
 				} else {
 					_success_states[member_idx] = SuccessState{
-						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						SuccessState::SuccessType::SUCCESS_BY_EQUIVALENCE,
 						ak_successful_genidx,
 						{}, {}, {}, {}
 					};
@@ -258,9 +254,9 @@ public:
 			}
 		}
 		break;
-		case SuccessType::SUCCESS_BY_SEQUENCE_TEST:
+		case SuccessState::SuccessType::SUCCESS_BY_SEQUENCE_TEST:
 		{
-			if (!_success_state.seq_success_solution.has_value()) {
+			if (!success_state.seq_success_solution.has_value()) {
 				throw std::runtime_error(
 					"Success state was SUCCESS_BY_SEQUENCE_TEST but no sequence success solution was provided"
 				);
@@ -277,7 +273,7 @@ public:
 					_success_states[member_idx] = success_state;
 				} else {
 					_success_states[member_idx] = SuccessState{
-						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						SuccessState::SuccessType::SUCCESS_BY_EQUIVALENCE,
 						seq_successful_genidx,
 						{}, {}, {}, {}
 					};
@@ -285,9 +281,9 @@ public:
 			}
 		}
 		break;
-		case SuccessType::SUCCESS_BY_MULT_TEST:
+		case SuccessState::SuccessType::SUCCESS_BY_MULT_TEST:
 		{
-			if (!_success_state.mult_success_solution.has_value()) {
+			if (!success_state.mult_success_solution.has_value()) {
 				throw std::runtime_error(
 					"Success state was SUCCESS_BY_MULT_TEST but no multiplication success solution was provided"
 				);
@@ -305,7 +301,7 @@ public:
 					_success_states[member_idx] = success_state;
 				} else {
 					_success_states[member_idx] = SuccessState{
-						SuccessType::SUCCESS_BY_EQUIVALENCE,
+						SuccessState::SuccessType::SUCCESS_BY_EQUIVALENCE,
 						mult_successful_genidx,
 						{}, {}, {}, {}
 					};
@@ -346,40 +342,44 @@ public:
 		std::deque<
 			std::pair<
 				std::future<SuccessState>, 
-				std::vector<i32>
+				std::reference_wrapper<const std::vector<i32>>
 			>
 		> local_futures;
 		for (const auto& [rep, class_info] : class_map) {
 			if (class_info.second) {
 				continue;
 			}
-			local_futures.push_back(
+			local_futures.push_back({
 				_local_pool.Enqueue(
-					[this](std::vector<i32> class_members) {
-						return non_mult_class_tests(
+					[this](const std::vector<i32>& class_members) 
+						-> SuccessState
+					{
+						return is_non_mult_successful(
 							class_members,
 							_generators_state
 						);
 					}, 
 					class_info.first
 				),
-				class_info.first
-			);
+				std::cref(class_info.first)
+			});
 		}
 		while (local_futures.size() > 0) {
-			auto pair = local_futures.front();
+			auto& pair = local_futures.front();
 			auto result = pair.first.get();
-			auto class_members = pair.second;
+			const auto& class_members = pair.second.get();
 			local_futures.pop_front();
 			// Process result as needed
 			update_success_states_from_class_test(
 				class_members,
 				result
 			);
-			if (result.success_type != SuccessType::NONE) {
-				for (i32 member_idx : class_members) {
-					new_successful.push_back(member_idx);
-				}
+			if (result.success_type != SuccessState::SuccessType::NONE) {
+				new_successful.insert(
+					new_successful.end(),
+					class_members.begin(),
+					class_members.end()
+				);
 				std::println(
 					"Class successful by non-mult test. Success type: {}. Class size: {}",
 					static_cast<int>(result.success_type),
@@ -389,14 +389,12 @@ public:
 		}
 
 		_successful.insert(
-			_successful.end(),
 			new_successful.begin(),
 			new_successful.end()
 		);
-		_remaining.erase(
-			new_successful.begin(),
-			new_successful.end()
-		);
+		for (i32 succ_idx : new_successful) {
+			_remaining.erase(succ_idx);
+		}
 
 	}
 
@@ -408,41 +406,52 @@ public:
 
 		std::deque<
 			std::pair<
-				std::future<SuccessState>, 
-				std::vector<i32>
+				std::future<MultAndAkSuccessSolution>, 
+				std::reference_wrapper<const std::vector<i32>>
 			>
 		> local_futures;
 		for (const auto& [rep, class_info] : class_map) {
 			if (class_info.second) {
 				continue;
 			}
-			local_futures.push_back(
+			local_futures.push_back({
 				_local_pool.Enqueue(
-					[this](std::vector<i32> class_members) {
-						return mult_class_tests(
+					[this](const std::vector<i32>& class_members) 
+						-> MultAndAkSuccessSolution
+					{
+						return is_mult_successful(
 							class_members,
 							_generators_state
 						);
 					}, 
 					class_info.first
 				),
-				class_info.first
-			);
+				std::cref(class_info.first)
+			});
 		}
 		while (local_futures.size() > 0) {
-			auto pair = local_futures.front();
+			auto& pair = local_futures.front();
 			auto result = pair.first.get();
-			auto class_members = pair.second;
+			const auto& class_members = pair.second.get();
 			local_futures.pop_front();
 			// Process result as needed
 			update_success_states_from_class_test(
 				class_members,
-				result
-			);
-			if (result.success_type != SuccessType::NONE) {
-				for (i32 member_idx : class_members) {
-					new_successful.push_back(member_idx);
+				SuccessState{
+					result.mult_result.success ? 
+						SuccessState::SuccessType::SUCCESS_BY_MULT_TEST : 
+						SuccessState::SuccessType::NONE,
+					result.mult_successful_genidx,
+					{}, {}, {}, result
 				}
+			);
+			if (result.mult_result.success) {
+				new_successful.insert(
+					new_successful.end(),
+					class_members.begin(),
+					class_members.end()
+				);
+
 				std::println(
 					"Class successful by mult test. Class size: {}",
 					class_members.size()
@@ -451,48 +460,11 @@ public:
 		}
 
 		_successful.insert(
-			_successful.end(),
 			new_successful.begin(),
 			new_successful.end()
 		);
-		_remaining.erase(
-			new_successful.begin(),
-			new_successful.end()
-		);
-	}
-
-	const void write_to_file() const {
-		auto filename = get_project_file_path("statistics/gamma_" + std::to_string(_n) + "_stat.txt");
-		std::ofstream file(filename);
-		if (!file.is_open()) {
-			throw std::runtime_error("Could not open file for writing: " + filename);
-		}
-		
-		for (const auto& result : _check_results) {
-			// Write products_tested
-			file << result.products_tested << '\n';
-			
-			// Write inversion_permutation_at_success
-			file << static_cast<int>(result.inversion_permutation_at_success) << '\n';
-			
-			// Write ypos_at_success
-			file << static_cast<int>(result.ypos_at_success) << '\n';
-			
-			// Write gens_giving_success vector
-			file << ':';
-			for (i32 i = 0; i < result.gens_giving_success.size(); ++i) {
-				if (i > 0) file << ',';
-				file << result.gens_giving_success[i];
-			}
-			file << '\n';
-			
-			// Write gens_permutation vector
-			file << ':';
-			for (i32 i = 0; i < result.gens_permutation.size(); ++i) {
-				if (i > 0) file << ',';
-				file << result.gens_permutation[i];
-			}
-			file << '\n';
+		for (i32 succ_idx : new_successful) {
+			_remaining.erase(succ_idx);
 		}
 	}
 
