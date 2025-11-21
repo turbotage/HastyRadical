@@ -1,5 +1,6 @@
 module;
 
+#include <unordered_map>
 export module containers;
 
 import std;
@@ -9,9 +10,14 @@ private:
     std::vector<int> parent_;
     std::vector<int> rank_;
     std::unordered_map<int, bool> class_bool_;
+
+    int _last_num_classes = -1;
+    int _last_largest_class_size = -1;
 public:
     UnionFind(int n) : parent_(n), rank_(n, 0) {
         std::iota(parent_.begin(), parent_.end(), 0); // Each element is its own parent initially
+        _last_num_classes = n;
+        _last_largest_class_size = 1;
     }
 
     // Find with path compression
@@ -80,23 +86,26 @@ public:
         return class_bool_[root_x];
     }
 
-    // Get all equivalence classes
-    std::unordered_map<int, std::vector<int>> get_classes() {
-        std::unordered_map<int, std::vector<int>> classes;
-        classes.reserve((int)(parent_.size() / 10));
+    std::unordered_map<int, std::pair<std::vector<int>, bool>> get_classes_with_bool() {
+        std::unordered_map<int, std::pair<std::vector<int>, bool>> classes;
+        classes.reserve(_last_num_classes);
         for (int i = 0; i < parent_.size(); ++i) {
             int root = find(i);
-            classes[root].push_back(i);
+            auto &entry = classes[root];
+            entry.first.reserve(_last_largest_class_size);
+            entry.first.push_back(i);
+            entry.second = class_bool_[root];
         }
+        _last_num_classes = classes.size();
         return classes;
     }
 
-    std::unordered_map<int, std::pair<std::vector<int>, bool>> get_classes_with_bool() {
-        auto classes = get_classes();
-        std::unordered_map<int, std::pair<std::vector<int>, bool>> result;
-        result.reserve(classes.size());
-        for (const auto& [rep, members] : classes) {
-            result[rep] = {members, class_bool_[rep]};
+    std::vector<std::pair<std::vector<int>, bool>> get_classes_list_with_bool() {
+        std::vector<std::pair<std::vector<int>, bool>> result;
+        auto class_map = get_classes_with_bool();
+        result.reserve(class_map.size());
+        for (auto& [root, class_info] : class_map) {
+            result.push_back(std::move(class_info));
         }
         return result;
     }

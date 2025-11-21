@@ -1,12 +1,14 @@
 module;
 
-export module test;
+#include <functional>
+#include <future>
+export module test_class;
 
 import std;
 import radlib;
 import threadpool;
 import containers;
-
+import util;
 import tests;
 
 
@@ -29,16 +31,20 @@ private:
 public:
 
 	TestGammaN(std::vector<std::array<i64,4>>&& gens, i32 n)
-		: _n(n), 
+		: 
+		_n(n), 
 		_generators(std::move(gens)), 
 		_successful(), 
 		_remaining(std::ranges::to<std::unordered_set<i32>>(std::ranges::iota_view{0uz, _generators.size()})), 
 		_success_states(_generators.size()),
-		_small_pool(1),
-		_large_pool(1),
 		_union_find(_generators.size()),
+		_small_pool(20),
+		_large_pool(20),
 		_generators_state(
-			_generators, _successful, _remaining, _n, _large_pool
+			_generators, _successful, _remaining, 
+			_n,
+			_generators.size(),
+			_large_pool
 		)
 	{
 		_successful.reserve(_remaining.size());
@@ -48,12 +54,12 @@ public:
 		return _generators_state;
 	}
 
-	std::unordered_map<i32, std::vector<i32>> get_equiv_classes() {
-		return _union_find.get_classes();
-	}
-
 	std::unordered_map<i32, std::pair<std::vector<i32>, bool>> get_equiv_classes_with_bool() {
 		return _union_find.get_classes_with_bool();
+	}
+
+	std::vector<std::pair<std::vector<i32>, bool>> get_equiv_classes_list_with_bool() {
+		return _union_find.get_classes_list_with_bool();
 	}
 
 	const std::unordered_set<i32>& get_successful_generators() const {
@@ -293,6 +299,12 @@ public:
 				success_state.mult_success_solution->mult_successful_genidx;
 
 			for (i32 member_idx : class_members) {
+				if (member_idx >= _success_states.size()) {
+					throw std::runtime_error(
+						"Member index out of bounds in update_success_states_from_class_test"
+					);
+				}
+
 				// For the index giving the solution we set the
 				// success state to the returned state
 				// For the others we set it to equivalence
@@ -335,142 +347,288 @@ public:
 
 	void run_non_mult_class_tests()
 	{
-		auto class_map = get_equiv_classes_with_bool();
+		std::vector<std::pair<std::vector<i32>, bool>> class_map = _union_find.get_classes_list_with_bool();
 		std::vector<i32> new_successful;
 		new_successful.reserve(_remaining.size());
 
-		std::deque<
-			std::pair<
-				std::future<SuccessState>, 
-				std::reference_wrapper<const std::vector<i32>>
-			>
-		> local_futures;
-		for (const auto& [rep, class_info] : class_map) {
-			if (class_info.second) {
+		using SuccessPair = std::pair<
+			SuccessState,
+			crefw<std::vector<i32>>
+		>;
+
+		std::deque<std::future<SuccessPair>> futures;
+		for (const auto& [class_members, success] : class_map) {
+			if (success) {
 				continue;
 			}
-			local_futures.push_back({
+			futures.push_back({
 				_large_pool.Enqueue(
 					[this](const std::vector<i32>& class_members) 
-						-> SuccessState
+						-> SuccessPair
 					{
-						return is_non_mult_successful(
+						return std::make_pair(is_non_mult_successful(
 							class_members,
 							_generators_state
-						);
+						), std::cref(class_members));
 					}, 
-					class_info.first
-				),
-				std::cref(class_info.first)
+					std::cref(class_members)
+				)
 			});
 		}
-		while (local_futures.size() > 0) {
-			auto& pair = local_futures.front();
-			auto result = pair.first.get();
+		std::vector<std::vector<i32>> successful_classes;
+		while (!futures.empty()) {
+			auto pair = pop_when_ready(futures);
+			const auto& result = pair.first;
 			const auto& class_members = pair.second.get();
-			local_futures.pop_front();
+
 			// Process result as needed
 			update_success_states_from_class_test(
 				class_members,
 				result
 			);
 			if (result.success_type != SuccessState::SuccessType::NONE) {
-				new_successful.insert(
-					new_successful.end(),
-					class_members.begin(),
-					class_members.end()
-				);
-				std::println(
-					"Class successful by non-mult test. Success type: {}. Class size: {}",
-					static_cast<int>(result.success_type),
-					class_members.size()
-				);
+				successful_classes.push_back(class_members);
+				// std::println(
+				// 	"Class successful by non-mult test. Success type: {}. Class size: {}",
+				// 	static_cast<int>(result.success_type),
+				// 	class_members.size()
+				// );
 			}
 		}
 
-		_successful.insert(
-			new_successful.begin(),
-			new_successful.end()
-		);
-		for (i32 succ_idx : new_successful) {
-			_remaining.erase(succ_idx);
+
+		for (const auto& class_members : successful_classes) {
+			_successful.insert(
+				class_members.begin(),
+				class_members.end()
+			);
+			for (i32 succ_idx : class_members) {
+				_remaining.erase(succ_idx);
+			}
+		}
+
+		// Unite all successful classes
+		class_map = _union_find.get_classes_list_with_bool();
+		i32 last_success_index = -1;
+		for (const auto& [class_members, success] : class_map) {
+			if (success) {
+				if (last_success_index == -1) {
+					last_success_index = class_members[0];
+				} else {
+					_union_find.unite(last_success_index, class_members[0]);
+					last_success_index = class_members[0];
+				}
+			}
 		}
 
 	}
 
-	void run_mult_class_tests()
+	inline auto one_mult_class_test(
+		const std::vector<i32>& class_members,
+		MultType mult_type,
+		std::atomic<bool>& stop_flag
+	) -> std::pair<MultAndAkSuccessSolution, crefw<std::vector<i32>>>
 	{
-		auto class_map = get_equiv_classes_with_bool();
-		std::vector<i32> new_successful;
-		new_successful.reserve(_remaining.size());
+		if (mult_type == MultType::MULT1) {
+			return std::make_pair(
+				is_mult1_successful(
+					class_members,
+					_generators_state,
+					stop_flag
+				), 
+				std::cref(class_members)
+			);
+		} else if (mult_type == MultType::MULT2) {
+			return std::make_pair(
+				is_mult2_successful(
+					class_members,
+					_generators_state,
+					stop_flag
+				), 
+				std::cref(class_members)
+			);
+		} else if (mult_type == MultType::MULT2_AK) {
+			return std::make_pair(
+				is_mult2_Ak_successful(
+					class_members,
+					_generators_state,
+					stop_flag
+				), 
+				std::cref(class_members)
+			);
+		} else {
+			throw std::runtime_error(
+				"Unknown multiplication type in run_mult_class_tests"
+			);
+		}
+	}
 
-		std::deque<
-			std::pair<
-				std::future<MultAndAkSuccessSolution>, 
-				std::reference_wrapper<const std::vector<i32>>
-			>
-		> local_futures;
-		for (const auto& [rep, class_info] : class_map) {
-			if (class_info.second) {
+	i32 run_mult_class_tests(MultType mult_type)
+	{
+		std::vector<std::pair<std::vector<i32>, bool>> classes_list = _union_find.get_classes_list_with_bool();
+		i32 current_successful = _successful.size();
+
+		_generators_state.current_class_size = classes_list.size();
+
+		// std::unordered_set<i32> processed_indices;
+		// std::unordered_set<i32> all_successful_indices;
+		// for (const auto& [class_members, class_success] : classes_list) {
+		// 	for (i32 idx : class_members) {
+		// 		if (processed_indices.contains(idx)) {
+		// 			throw std::runtime_error(
+		// 				"Generator index appears in multiple classes in run_mult_class_tests"
+		// 			);
+		// 		}
+		// 		processed_indices.insert(idx);
+		// 		if (class_success) {
+		// 			all_successful_indices.insert(idx);
+		// 		}
+		// 	}
+		// }
+		// for (i32 idx = 0; idx < _generators.size(); ++idx) {
+		// 	if (!processed_indices.contains(idx)) {
+		// 		throw std::runtime_error(
+		// 			"Generator index missing from classes in run_mult_class_tests"
+		// 		);
+		// 	}
+		// }
+		// for (i32 idx : all_successful_indices) {
+		// 	if (!_successful.contains(idx)) {
+		// 		throw std::runtime_error(
+		// 			"Generator marked successful in class but not in successful set in run_mult_class_tests"
+		// 		);
+		// 	}
+		// }
+		// for (i32 idx : _successful) {
+		// 	if (!all_successful_indices.contains(idx)) {
+		// 		throw std::runtime_error(
+		// 			"Generator marked successful in successful set but not in class in run_mult_class_tests"
+		// 		);
+		// 	}
+		// }
+
+		std::println(
+			"Number of classes {}",
+			classes_list.size()
+		);
+
+		std::atomic<bool> stop_flag;
+		stop_flag.store(false);
+
+		using MultVecPair = std::pair<
+			MultAndAkSuccessSolution,
+			std::reference_wrapper<const std::vector<i32>>
+		>;
+
+		std::deque<std::future<MultVecPair>> futures;
+
+		std::optional<MultVecPair> result_pair;
+
+		auto one_class_mult_checker = [this] (
+							const std::vector<i32>& class_members, 
+							MultType mult_type, 
+							std::atomic<bool>& stop_flag) 
+		{
+			return one_mult_class_test(
+				class_members,
+				mult_type,
+				stop_flag
+			);
+		};
+
+		i32 small_pool_size = _small_pool.NumberOfThreads();
+		for (const auto& [class_members, class_success] : classes_list) {
+			// We shall only try non successful classes
+			if (class_success) {
 				continue;
 			}
-			local_futures.push_back({
-				_small_pool.Enqueue(
-					[this](const std::vector<i32>& class_members) 
-						-> MultAndAkSuccessSolution
-					{
-						return is_mult_successful(
-							class_members,
-							_generators_state
-						);
-					}, 
-					class_info.first
-				),
-				std::cref(class_info.first)
-			});
-		}
-		while (local_futures.size() > 0) {
-			auto& pair = local_futures.front();
-			auto result = pair.first.get();
-			const auto& class_members = pair.second.get();
-			local_futures.pop_front();
-			// Process result as needed
-			update_success_states_from_class_test(
-				class_members,
-				SuccessState{
-					result.mult_result.success ? 
-						SuccessState::SuccessType::SUCCESS_BY_MULT_TEST : 
-						SuccessState::SuccessType::NONE,
-					result.mult_successful_genidx,
-					{}, {}, {}, result
-				}
-			);
-			if (result.mult_result.success) {
-				new_successful.insert(
-					new_successful.end(),
-					class_members.begin(),
-					class_members.end()
-				);
+			//std::println("Submitting class with first member idx {}", class_members[0]);
 
-				std::println(
-					"Class successful by mult test. Class size: {}",
-					class_members.size()
-				);
+			// auto ret = one_class_mult_checker(
+			// 	class_members, mult_type, stop_flag
+			// );
+
+			// std::promise<decltype(ret)> prom;
+			// prom.set_value(std::move(ret));
+			// futures.push_back(prom.get_future());
+
+			futures.push_back({
+				_small_pool.Enqueue(
+					one_class_mult_checker,
+					std::cref(class_members), mult_type, std::ref(stop_flag)
+				),
+			});
+
+			if (futures.size() > small_pool_size) {
+				MultVecPair popped_pair = pop_when_ready(futures);
+				if (popped_pair.first.mult_result.success) {
+					stop_flag.store(true);
+					result_pair = std::move(popped_pair);
+					break;
+				}
+			}
+		}
+		std::vector<std::vector<i32>> successful_classes;
+
+		auto process_result_pair = [&]() {
+			if (result_pair.has_value()) {
+				MultVecPair& result_pair_ref = *result_pair;
+				if (result_pair_ref.first.mult_result.success) {
+					// Process result as needed
+					const auto& result = result_pair_ref.first;
+					const auto& class_members = result_pair_ref.second.get();
+					update_success_states_from_class_test(
+						class_members,
+						SuccessState{
+							result.mult_result.success ? 
+								SuccessState::SuccessType::SUCCESS_BY_MULT_TEST : 
+								SuccessState::SuccessType::NONE,
+							result.mult_successful_genidx,
+							{}, {}, {}, result
+						}
+					);
+					if (result.mult_result.success) {
+						for (i32 succ_idx : class_members) {
+							if (_successful.contains(succ_idx)) {
+								throw std::runtime_error(
+									"Generator already marked successful in run_mult_class_tests"
+								);
+							}
+						}
+
+						successful_classes.push_back(class_members);
+						// std::println(
+						// 	"Class successful by mult test. Class size: {}",
+						// 	class_members.size()
+						// );
+					}
+				}
+			}
+		};
+
+		process_result_pair();
+		while (!futures.empty()) {
+			result_pair = pop_when_ready(futures);
+			process_result_pair();
+		}
+
+		for (const auto& class_members : successful_classes) {
+			_successful.insert(
+				class_members.begin(),
+				class_members.end()
+			);
+			for (i32 succ_idx : class_members) {
+				_remaining.erase(succ_idx);
 			}
 		}
 
-		_successful.insert(
-			new_successful.begin(),
-			new_successful.end()
-		);
-		for (i32 succ_idx : new_successful) {
-			_remaining.erase(succ_idx);
-		}
+		i32 new_successful_size = _successful.size() - current_successful;
+
+		return new_successful_size;
 	}
 
 private:
 
 
 };
-
 

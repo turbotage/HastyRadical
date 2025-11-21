@@ -49,5 +49,6 @@ target_sources(HastyRadical
             "src/test_class.cppm"
             "src/threadpool.cppm"
             "src/tests.cppm"
+            "src/util.cppm"
 )
 

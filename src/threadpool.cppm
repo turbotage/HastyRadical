@@ -48,6 +48,20 @@ public:
   ThreadPool(ThreadPool &&) = delete;
   auto operator=(ThreadPool) -> ThreadPool & = delete;
 
+  std::size_t NumberOfWorkitems() {
+    const auto guard = std::lock_guard<std::mutex>{lock_};
+    return tasks_.size();
+  }
+
+  std::size_t NumberOfThreads() const {
+    return threads_.size();
+  }
+
+  bool PoolIsBusy() {
+    const auto guard = std::lock_guard<std::mutex>{lock_};
+    return !tasks_.empty();
+  }
+
   auto Stop() -> void {
     stopped_ = true;
     cv_.notify_all();

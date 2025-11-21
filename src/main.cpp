@@ -2,17 +2,19 @@
 import std;
 import radlib;
 import threadpool;
-import test;
+import tests;
+import test_class;
 import containers;
 
 void run_gamma_test() {
-        std::println("Hello, Hasty Radical!");
+    std::println("Hello, Hasty Radical!\n");
 
-    int maxn = 50;
 
     auto run_gamma = [](int n) {
         auto gens = load_group_generators_tilde<i64>(n);
-        std::println("Loaded {} generators for Gamma({})", gens.size(), n);
+        i32 num_gens = gens.size();
+        std::println("Loaded {} generators for Gamma({})", num_gens, n);
+
 
         auto tgn = TestGammaN(std::move(gens), n);
 
@@ -37,17 +39,43 @@ void run_gamma_test() {
         std::println("Found {} equivalence classes after initial check for Gamma({})", classes.size(), n);
         std::println("Successful generators after initial check: {}", tgn.get_successful_generators().size());
 
-        //tgn.run_non_mult_class_tests();
-
+        tgn.run_non_mult_class_tests();
         std::println("Successful generators after non mult check: {}", tgn.get_successful_generators().size());
 
-        tgn.run_mult_class_tests();
+        MultType mult_type = MultType::MULT1;
+        i32 new_successful_size = tgn.run_mult_class_tests(MultType::MULT1);
+        //std::println("Successful generators after first MULT1 check: {}", tgn.get_successful_generators().size());
+        while (num_gens != tgn.get_successful_generators().size()) {
+            if (new_successful_size == 0 && (mult_type == MultType::MULT1)) {
+                std::println("Switching to MULT2", n);
+                mult_type = MultType::MULT2;
+                new_successful_size = tgn.run_mult_class_tests(MultType::MULT2);
+                //std::println("Successful generators after MULT2 check: {}", tgn.get_successful_generators().size());
+            } else if (new_successful_size == 0 && (mult_type == MultType::MULT2)) {
+                std::println("Switching to MULT2_AK", n);
+                mult_type = MultType::MULT2_AK;
+                new_successful_size = tgn.run_mult_class_tests(MultType::MULT2_AK);
+                //std::println("Successful generators after MULT2_AK check: {}", tgn.get_successful_generators().size());
+            } else if (new_successful_size == 0 && (mult_type == MultType::MULT2_AK)) {
+                throw std::runtime_error("No new successful generators found in last mult type, stopping.");
+            } else {
+                mult_type = MultType::MULT1;
+                new_successful_size = tgn.run_mult_class_tests(MultType::MULT1);
+                //std::println("Successful generators after MULT1 check: {}", tgn.get_successful_generators().size());
+            }
+        }
 
         std::println("Successful generators after mult check: {}", tgn.get_successful_generators().size());
+        std::println("Finished Gamma({})", n);
+        std::println("-------------------------------------------------");
+        std::println("");
 
     };
 
-    run_gamma(100);
+    for (int n = 90; n <= 100; ++n) {
+        run_gamma(n);
+    }
+    //run_gamma(50);
 
     /*
     std::vector<std::future<void>> futures;

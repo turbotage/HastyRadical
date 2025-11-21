@@ -6,6 +6,7 @@ import std;
 import radlib;
 import threadpool;
 import containers;
+import util;
 
 import mult_test;
 
@@ -13,22 +14,25 @@ export struct GeneratorsState {
 
     GeneratorsState(
         const std::vector<std::array<i64,4>>& gens,
-        const std::unordered_set<i32>& succ,
-        const std::unordered_set<i32>& rem,
+        std::unordered_set<i32>& succ,
+        std::unordered_set<i32>& rem,
         i32 n_val,
+        i32 current_class_size_val,
         ThreadPool& thread_pool
     )
         : generators(gens),
           successful(succ),
           remaining(rem),
           n(n_val),
+          current_class_size(current_class_size_val),
           tp(thread_pool)
     {}
 
     const std::vector<std::array<i64,4>>& generators;
-    const std::unordered_set<i32>& successful;
-    const std::unordered_set<i32>& remaining;
+    std::unordered_set<i32>& successful;
+    std::unordered_set<i32>& remaining;
     i32 n;
+    i32 current_class_size;
     ThreadPool& tp;
 };
 
@@ -42,10 +46,8 @@ export InitialSuccessSolution is_initial_successful(
     const GeneratorsState& gen_state
 ) {
     for (i32 midx = 0; midx < class_members.size(); ++midx) {
-        for (i32 succ : gen_state.successful) {
-            if (class_members[midx] == succ) {
-                return {true, class_members[midx]};
-            }
+        if (gen_state.successful.contains(class_members[midx])) {
+            return {true, class_members[midx]};
         }
     }
     return {false, -1};
@@ -104,9 +106,158 @@ export struct MultAndAkSuccessSolution
     MultResult mult_result;
 };
 
-export MultAndAkSuccessSolution is_mult_successful(
+export enum class MultType : u8 {
+    MULT1,
+    MULT2,
+    MULT2_AK
+};
+
+export MultAndAkSuccessSolution is_mult1_successful(
     const std::vector<i32>& class_members,
-    const GeneratorsState& gen_state
+    const GeneratorsState& gen_state,
+    std::atomic<bool>& stop_flag
+) 
+{
+    auto member_checker = [&class_members, &gen_state](i32 mat1_idx)
+        -> MultAndAkSuccessSolution
+    {
+        std::vector<std::array<i128,4>> factors(2);
+        std::vector<bool> factors_are_k = {false, false};
+
+        factors[1] = cast_matrix<i128>(gen_state.generators[mat1_idx]);
+
+        for (i32 midx : class_members) {
+
+            factors[0] = cast_matrix<i128>(gen_state.generators[midx]);
+            auto result = check_one_mult<i128>(
+                                        factors, 
+                                        factors_are_k, 
+                                        gen_state.n
+                                    );
+            if (result.success) {
+                return MultAndAkSuccessSolution{
+                    midx, mat1_idx, -1, -1, result
+                };
+            }
+
+        }
+        return MultAndAkSuccessSolution{
+            -1, -1, -1, -1, MultResult{}
+        };
+    };
+
+    MultAndAkSuccessSolution result;
+
+    i32 pool_size = (i32)gen_state.tp.NumberOfThreads();
+    i32 local_queue_size = std::max(1, pool_size / gen_state.current_class_size);
+    i32 succ_size = gen_state.successful.size();
+    std::deque<std::future<MultAndAkSuccessSolution>> futures;
+    // iterate over all permutations of 2 successful generators
+    for (auto it1 = gen_state.successful.begin(); it1 != gen_state.successful.end(); ++it1) {
+        i32 mat1_idx = *it1;
+
+        if (stop_flag.load()) {
+            goto loop_done;
+        }
+        if ((futures.size() > local_queue_size && gen_state.tp.PoolIsBusy()) || futures.size() > 4*pool_size) {
+            result = pop_when_ready(futures);
+            if (result.mult_result.success) {
+                goto loop_done;
+            }
+        }
+
+        futures.push_back(gen_state.tp.Enqueue(
+            member_checker, mat1_idx
+        ));
+    }
+    loop_done:
+    while (!futures.empty()) {
+        if (!result.mult_result.success) {
+            result = pop_when_ready(futures);
+        } else {
+            pop_when_ready(futures);
+        }
+    }
+    return result;
+}
+
+export MultAndAkSuccessSolution is_mult2_successful(
+    const std::vector<i32>& class_members,
+    const GeneratorsState& gen_state,
+    std::atomic<bool>& stop_flag
+) 
+{
+    auto member_checker = [&class_members, &gen_state](i32 mat1_idx, i32 mat2_idx)
+        -> MultAndAkSuccessSolution
+    {
+        std::vector<std::array<i128,4>> factors(3);
+        std::vector<bool> factors_are_k = {false, false, false};
+
+        factors[1] = cast_matrix<i128>(gen_state.generators[mat1_idx]);
+        factors[2] = cast_matrix<i128>(gen_state.generators[mat2_idx]);
+
+        for (i32 midx : class_members) {
+
+            factors[0] = cast_matrix<i128>(gen_state.generators[midx]);
+            auto result = check_one_mult<i128>(
+                                        factors, 
+                                        factors_are_k, 
+                                        gen_state.n
+                                    );
+            if (result.success) {
+                return MultAndAkSuccessSolution{
+                    midx, mat1_idx, mat2_idx, -1, result
+                };
+            }
+
+        }
+        return MultAndAkSuccessSolution{
+            -1, -1, -1, -1, MultResult{}
+        };
+    };
+
+    MultAndAkSuccessSolution result;
+
+    i32 pool_size = (i32)gen_state.tp.NumberOfThreads();
+    i32 local_queue_size = std::max(1, pool_size / gen_state.current_class_size);
+    i32 succ_size = gen_state.successful.size();
+    std::deque<std::future<MultAndAkSuccessSolution>> futures;
+    // iterate over all permutations of 2 successful generators
+    for (auto it1 = gen_state.successful.begin(); it1 != gen_state.successful.end(); ++it1) {
+    for (auto it2 = it1; it2 != gen_state.successful.end(); ++it2) {
+        i32 mat1_idx = *it1;
+        i32 mat2_idx = *it2;
+
+        if (stop_flag.load()) {
+            goto loop_done;
+        }
+        if ((futures.size() > local_queue_size && gen_state.tp.PoolIsBusy()) || futures.size() > 4*pool_size) {
+            result = pop_when_ready(futures);
+            if (result.mult_result.success) {
+                goto loop_done;
+            }
+        }
+
+        futures.push_back(gen_state.tp.Enqueue(
+            member_checker, mat1_idx, mat2_idx
+        ));
+    }}
+    loop_done:
+    while (!futures.empty()) {
+        if (!result.mult_result.success) {
+            result = pop_when_ready(futures);
+        } else {
+            pop_when_ready(futures);
+        }
+    }
+    return result;
+}
+
+
+export MultAndAkSuccessSolution is_mult2_Ak_successful(
+    const std::vector<i32>& class_members,
+    const GeneratorsState& gen_state,
+    std::atomic<bool>& stop_flag
 ) 
 {
     auto member_checker = [&class_members, &gen_state](i32 mat1_idx, i32 mat2_idx)
@@ -148,6 +299,8 @@ export MultAndAkSuccessSolution is_mult_successful(
 
     MultAndAkSuccessSolution result;
 
+    i32 pool_size = (i32)gen_state.tp.NumberOfThreads();
+    i32 local_queue_size = std::max(1, pool_size / gen_state.current_class_size);
     i32 succ_size = gen_state.successful.size();
     std::deque<std::future<MultAndAkSuccessSolution>> futures;
     // iterate over all permutations of 2 successful generators
@@ -156,24 +309,27 @@ export MultAndAkSuccessSolution is_mult_successful(
         i32 mat1_idx = *it1;
         i32 mat2_idx = *it2;
 
+        if (stop_flag.load()) {
+            goto loop_done;
+        }
+        if ((futures.size() > local_queue_size && gen_state.tp.PoolIsBusy()) || futures.size() > 4*pool_size) {
+            result = pop_when_ready(futures);
+            if (result.mult_result.success) {
+                goto loop_done;
+            }
+        }
+
         futures.push_back(gen_state.tp.Enqueue(
             member_checker, mat1_idx, mat2_idx
         ));
-        if (futures.size() >= 8) {
-            result = futures.front().get();
-            futures.pop_front();
-            if (result.mult_result.success) {
-                break;
-            }
-        }
     }}
+    loop_done:
     while (!futures.empty()) {
         if (!result.mult_result.success) {
-            result = futures.front().get();
+            result = pop_when_ready(futures);
         } else {
-            futures.front().get();
+            pop_when_ready(futures);
         }
-        futures.pop_front();
     }
     return result;
 }
